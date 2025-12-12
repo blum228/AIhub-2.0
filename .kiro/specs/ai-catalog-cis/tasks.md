@@ -1,0 +1,170 @@
+# Implementation Plan
+
+- [x] 1. Project setup and configuration
+  - [x] 1.1 Initialize Astro project with TypeScript
+    - Create new Astro project in workspace root
+    - Configure TypeScript with strict mode
+    - Copy IDS components and styles from idsAstro
+    - _Requirements: 9.1, 9.2_
+  - [x] 1.2 Install and configure dependencies
+    - Install Keystatic, fast-check, Vitest
+    - Configure astro.config.mjs with Keystatic integration
+    - Set up package.json scripts for dev, build, test
+    - _Requirements: 6.1, 6.2_
+  - [x] 1.3 Configure Astro Content Collections schema
+    - Create src/content/config.ts with tool schema using Zod
+    - Define all required fields: title, shortDescription, coverImage, tags, priceModel, isNsfw, affiliateLink, rating, etc.
+    - _Requirements: 6.3, 9.3_
+  - [x] 1.4 Write property test for schema validation
+    - **Property 7: Tool schema validation**
+    - **Validates: Requirements 6.3, 9.3, 9.4**
+  - [x] 1.5 Configure Keystatic CMS
+    - Create keystatic.config.ts with tool collection schema
+    - Configure image upload paths
+    - Set up local storage mode
+    - _Requirements: 6.1, 6.2, 6.4_
+
+- [x] 2. Checkpoint - Ensure all tests pass
+  - All 41 tests passing ✓
+
+- [x] 3. Core components implementation
+  - [x] 3.1 Create ToolCard component
+    - Implement ToolCard.astro with IDS Rounded component
+    - Add GIF preview on hover functionality
+    - Add price model badge display
+    - Add NSFW blur class for Safe Mode
+    - _Requirements: 1.2, 1.3, 5.1_
+  - [x] 3.2 Write property test for ToolCard rendering
+    - **Property 2: Tool card rendering completeness**
+    - **Validates: Requirements 1.2**
+  - [x] 3.3 Create ToolGrid component
+    - Implement ToolGrid.astro using IDS Sequence
+    - Configure responsive columns (4 desktop, 2 mobile)
+    - _Requirements: 1.1_
+  - [x] 3.4 Implement tool sorting utility
+    - Create sortToolsByRating function
+    - Handle tools without rating (sort to end)
+    - _Requirements: 1.1_
+  - [x] 3.5 Write property test for sorting
+    - **Property 1: Tool sorting by rating**
+    - **Validates: Requirements 1.1**
+  - [x] 3.6 Create TagFilter component
+    - Implement TagFilter.astro with IDS button styles
+    - Group tags by category (type, language, payment, access)
+    - Handle multi-select with AND logic
+    - _Requirements: 2.1, 2.2, 2.3, 2.4_
+  - [x] 3.7 Implement filtering utility
+    - Create filterToolsByTags function
+    - Implement AND logic for multiple tags
+    - Handle empty tag set (return all)
+    - _Requirements: 2.1, 2.2, 2.3_
+  - [x] 3.8 Write property test for filtering
+    - **Property 3: Tag filtering with AND logic**
+    - **Validates: Requirements 2.1, 2.2, 2.3**
+
+- [x] 4. Checkpoint - Ensure all tests pass
+  - All tests passing ✓
+
+- [x] 5. Safe Mode implementation
+  - [x] 5.1 Create SafeModeToggle component
+    - Implement toggle button in header
+    - Add/remove safe-mode class on body
+    - Persist state to localStorage
+    - _Requirements: 5.1, 5.2, 5.3, 5.4_
+  - [x] 5.2 Write property tests for Safe Mode
+    - **Property 5: Safe Mode CSS class application**
+    - **Property 6: Safe Mode localStorage round-trip**
+    - **Validates: Requirements 5.1, 5.2, 5.3**
+  - [x] 5.3 Add Safe Mode CSS styles
+    - Create .safe-mode .nsfw-image blur rule
+    - Add transition for smooth blur toggle
+    - _Requirements: 5.1, 5.3_
+
+- [x] 6. Search implementation
+  - [x] 6.1 Create SearchWidget component
+    - Implement Pagefind UI wrapper
+    - Style with IDS design tokens
+    - Add placeholder text in Russian
+    - _Requirements: 3.1, 3.2, 3.4_
+  - [x] 6.2 Configure Pagefind build
+    - Add pagefind to build script
+    - Configure Russian language support
+    - Set up data attributes for filtering
+    - _Requirements: 3.1, 3.4_
+
+- [x] 7. Page templates
+  - [x] 7.1 Create BaseLayout with SEO
+    - Implement CatalogLayout.astro with meta tags
+    - Add Open Graph tags
+    - Add canonical URL
+    - Include Safe Mode toggle in header
+    - _Requirements: 7.1, 7.4, 5.4_
+  - [x] 7.2 Write property test for SEO meta tags
+    - **Property 8: SEO meta tags completeness**
+    - **Validates: Requirements 7.1, 7.4**
+  - [x] 7.3 Create ToolLayout for tool pages
+    - Extend CatalogLayout with tool-specific SEO
+    - Add schema.org JSON-LD markup
+    - _Requirements: 7.1, 7.2_
+  - [x] 7.4 Write property test for schema.org markup
+    - **Property 9: Schema.org markup validity**
+    - **Validates: Requirements 7.2**
+  - [x] 7.5 Implement homepage (catalog/index.astro)
+    - Add hero section with search
+    - Display tool grid sorted by rating
+    - Add tag filters
+    - Add featured Telegram bots section
+    - _Requirements: 1.1, 1.4, 8.3_
+  - [x] 7.6 Implement tool page ([slug].astro)
+    - Display full tool content from MDX
+    - Add FAQ section
+    - Add PaymentGuide component
+    - Add RelatedTools component
+    - _Requirements: 4.1, 4.2, 4.3, 4.4_
+  - [x] 7.7 Write property test for tool page completeness
+    - **Property 4: Tool page section completeness**
+    - **Validates: Requirements 4.1, 4.2, 4.3, 4.4**
+  - [x] 7.8 Implement Telegram bots page
+    - Create telegram-bots.astro
+    - Filter tools by telegram-bot tag
+    - Add direct bot links
+    - _Requirements: 8.1, 8.2_
+  - [x] 7.9 Write property test for Telegram bot links
+    - **Property 11: Telegram bot direct link**
+    - **Validates: Requirements 8.2**
+
+- [x] 8. Checkpoint - Ensure all tests pass
+  - All 41 tests passing ✓
+
+- [x] 9. Supporting components
+  - [x] 9.1 Create PaymentGuide component
+    - Display payment instructions for non-RU card services
+    - Show alternative payment methods
+    - _Requirements: 4.3_
+  - [x] 9.2 Create RelatedTools component
+    - Find tools with shared tags
+    - Display as horizontal scroll or grid
+    - _Requirements: 4.4_
+
+- [x] 10. Sitemap and final SEO
+  - [x] 10.1 Configure Astro sitemap
+    - Install @astrojs/sitemap
+    - Configure site URL
+    - Generate sitemap.xml with all tool pages
+    - _Requirements: 7.3_
+  - [x] 10.2 Write property test for sitemap
+    - **Property 10: Sitemap completeness**
+    - **Validates: Requirements 7.3**
+
+- [x] 11. Sample content
+  - [x] 11.1 Create sample tool MDX files
+    - Add 3 sample tools with varied tags
+    - Include one Telegram bot (Chai Bot)
+    - Include tools with and without Russian card support
+    - _Requirements: 9.1_
+
+- [x] 12. Final Checkpoint - Ensure all tests pass
+  - All 41 property tests passing ✓
+  - Build successful ✓
+  - Pagefind indexing 4 pages ✓
+  - Sitemap generated ✓

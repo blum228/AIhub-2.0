@@ -1,0 +1,115 @@
+---
+import { getCollection } from 'astro:content';
+import CatalogLayout from '../../layouts/CatalogLayout.astro';
+import SearchWidget from '../../components/catalog/SearchWidget.astro';
+import TagFilter from '../../components/catalog/TagFilter.astro';
+import ToolGrid from '../../components/catalog/ToolGrid.astro';
+import Space from '../../components/Space.astro';
+import { sortToolsByRating, filterToolsByTags } from '../../lib/tools';
+import type { ToolData } from '../../lib/types';
+
+// Получаем все инструменты
+const toolsCollection = await getCollection('tools');
+
+// Преобразуем в ToolData
+const tools: ToolData[] = toolsCollection.map(entry => ({
+  slug: entry.slug,
+  ...entry.data
+}));
+
+// Сортируем по рейтингу
+const sortedTools = sortToolsByRating(tools);
+
+// Выделяем Telegram боты для featured секции
+const telegramBots = sortedTools.filter(t => t.tags.includes('telegram-bot')).slice(0, 4);
+---
+
+<CatalogLayout
+  title="Каталог AI-сервисов"
+  description="Лучшие AI-сервисы для ролеплея и генерации контента 18+. Фильтры по оплате, языку и доступности из России."
+>
+  <!-- Hero -->
+  <section class="hero">
+    <h1>AI Каталог для СНГ</h1>
+    <p class="hero__subtitle">
+      Лучшие AI-сервисы для ролеплея и генерации контента.<br />
+      Фильтры по оплате картами РФ, поддержке русского языка и доступности без VPN.
+    </p>
+    <SearchWidget placeholder="Поиск по названию или описанию..." />
+  </section>
+
+  <Space size="M" />
+
+  <!-- Фильтры -->
+  <TagFilter />
+
+  <!-- Основная сетка -->
+  <section class="tools-section">
+    <h2 class="section-title">Все сервисы</h2>
+    <ToolGrid tools={sortedTools} />
+  </section>
+
+  <!-- Featured: Telegram боты -->
+  {telegramBots.length > 0 && (
+    <section class="tools-section tools-section--featured">
+      <h2 class="section-title">
+        <span>🤖</span> Telegram боты
+        <a href="/telegram-bots" class="section-title__link">Все боты →</a>
+      </h2>
+      <ToolGrid tools={telegramBots} />
+    </section>
+  )}
+</CatalogLayout>
+
+<style>
+  .hero {
+    text-align: center;
+    padding: 2em 0;
+  }
+
+  .hero h1 {
+    font-size: 2.5em;
+    margin-bottom: 0.3em;
+  }
+
+  .hero__subtitle {
+    font-size: 1.1em;
+    opacity: 0.8;
+    margin-bottom: 1.5em;
+    line-height: 1.5;
+  }
+
+  .tools-section {
+    margin-bottom: 2em;
+  }
+
+  .tools-section--featured {
+    padding: 1.5em;
+    background: rgba(var(--ids__surface-RGB), 0.5);
+    border-radius: var(--ids__radius);
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+  }
+
+  .section-title__link {
+    margin-left: auto;
+    font-size: 0.6em;
+    font-weight: normal;
+  }
+
+  @media (max-width: 767px) {
+    .hero h1 {
+      font-size: 1.8em;
+    }
+
+    .hero__subtitle {
+      font-size: 1em;
+    }
+  }
+</style>

@@ -1,0 +1,49 @@
+---
+import CatalogLayout from './CatalogLayout.astro';
+import type { ToolData } from '../lib/types';
+
+interface Props {
+  tool: ToolData;
+}
+
+const { tool } = Astro.props;
+const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
+
+// Schema.org JSON-LD
+const schemaOrg = {
+  '@context': 'https://schema.org',
+  '@type': 'Product',
+  name: tool.title,
+  description: tool.shortDescription,
+  image: new URL(tool.coverImage, siteUrl).toString(),
+  url: new URL(`/tool/${tool.slug}`, siteUrl).toString(),
+  ...(tool.rating !== undefined && {
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: tool.rating,
+      bestRating: 5,
+      worstRating: 0,
+      ratingCount: 1
+    }
+  }),
+  offers: {
+    '@type': 'Offer',
+    price: tool.priceModel === 'free' ? '0' : undefined,
+    priceCurrency: 'USD',
+    availability: 'https://schema.org/InStock'
+  }
+};
+---
+
+<CatalogLayout
+  title={tool.title}
+  description={tool.shortDescription}
+  ogImage={tool.coverImage}
+  canonicalUrl={`${siteUrl}/tool/${tool.slug}`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+  </Fragment>
+
+  <slot />
+</CatalogLayout>

@@ -1,0 +1,103 @@
+---
+interface Props {
+  placeholder?: string;
+}
+
+const { placeholder = 'Поиск AI-сервисов...' } = Astro.props;
+---
+
+<div class="search-widget" id="search-widget">
+  <div id="pagefind-search" data-placeholder={placeholder}></div>
+</div>
+
+<style is:global>
+  .search-widget {
+    margin-bottom: 1.5em;
+  }
+
+  /* Pagefind UI стилизация под IDS */
+  .pagefind-ui {
+    --pagefind-ui-scale: 1;
+    --pagefind-ui-primary: rgb(var(--ids__link-RGB));
+    --pagefind-ui-text: rgb(var(--ids__text-RGB));
+    --pagefind-ui-background: rgb(var(--ids__background-RGB));
+    --pagefind-ui-border: rgba(var(--ids__text-RGB), 0.2);
+    --pagefind-ui-tag: rgb(var(--ids__surface-RGB));
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-border-radius: 0.5em;
+    --pagefind-ui-image-border-radius: 0.5em;
+    --pagefind-ui-image-box-ratio: 16 / 10;
+    --pagefind-ui-font: inherit;
+  }
+
+  .pagefind-ui__search-input {
+    font-family: inherit;
+    font-size: 1em;
+    padding: 0.75em 1em;
+    border-radius: var(--ids__radius);
+  }
+
+  .pagefind-ui__search-clear {
+    border-radius: 50%;
+  }
+
+  .pagefind-ui__result {
+    padding: 1em;
+    border-radius: var(--ids__radius);
+    background: rgb(var(--ids__surface-RGB));
+    margin-bottom: 0.5em;
+  }
+
+  .pagefind-ui__result-link {
+    font-weight: 600;
+  }
+
+  .pagefind-ui__result-excerpt {
+    font-size: 0.9em;
+    opacity: 0.8;
+  }
+
+  .pagefind-ui__result-excerpt mark {
+    background: rgb(var(--ids__mark-RGB));
+    color: inherit;
+    padding: 0.1em 0.2em;
+    border-radius: 0.2em;
+  }
+
+  .pagefind-ui__message {
+    padding: 2em;
+    text-align: center;
+    opacity: 0.6;
+  }
+</style>
+
+<script is:inline>
+  (async function initPagefind() {
+    const container = document.getElementById('pagefind-search');
+    if (!container) return;
+
+    const placeholder = container.dataset.placeholder || 'Поиск...';
+
+    try {
+      const pagefindModule = await import('/pagefind/pagefind-ui.js');
+      const PagefindUI = pagefindModule.PagefindUI;
+
+      new PagefindUI({
+        element: container,
+        showSubResults: true,
+        showImages: true,
+        translations: {
+          placeholder,
+          zero_results: 'Ничего не найдено по запросу «[SEARCH_TERM]»',
+          many_results: 'Найдено [COUNT] результатов',
+          one_result: 'Найден [COUNT] результат',
+          alt_search: 'Попробуйте поискать [SEARCH_TERM]',
+          search_suggestion: 'Возможно, вы имели в виду [SEARCH_TERM]',
+          searching: 'Поиск...'
+        }
+      });
+    } catch (e) {
+      container.innerHTML = '<div class="pagefind-ui__message">Поиск доступен после сборки сайта (npm run build)</div>';
+    }
+  })();
+</script>

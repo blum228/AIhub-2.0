@@ -1,0 +1,51 @@
+---
+import Sequence from '../Sequence.astro';
+import SequenceItem from '../SequenceItem.astro';
+import ToolCard from './ToolCard.astro';
+import type { ToolData } from '../../lib/types';
+import { findRelatedTools } from '../../lib/tools';
+
+interface Props {
+  currentTool: ToolData;
+  allTools: ToolData[];
+  limit?: number;
+}
+
+const { currentTool, allTools, limit = 4 } = Astro.props;
+const relatedTools = findRelatedTools(currentTool, allTools, limit);
+---
+
+{relatedTools.length > 0 && (
+  <section class="related-tools">
+    <h3 class="related-tools__title">Похожие сервисы</h3>
+    <Sequence size="M" gap="M">
+      {relatedTools.map(tool => (
+        <SequenceItem>
+          <ToolCard
+            slug={tool.slug}
+            title={tool.title}
+            shortDescription={tool.shortDescription}
+            coverImage={tool.coverImage}
+            gifPreview={tool.gifPreview}
+            priceModel={tool.priceModel}
+            tags={tool.tags}
+            isNsfw={tool.isNsfw}
+            telegramBotLink={tool.telegramBotLink}
+          />
+        </SequenceItem>
+      ))}
+    </Sequence>
+  </section>
+)}
+
+<style>
+  .related-tools {
+    margin-top: 3em;
+    padding-top: 2em;
+    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  .related-tools__title {
+    margin-bottom: 1em;
+  }
+</style>

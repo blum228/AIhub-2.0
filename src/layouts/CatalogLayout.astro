@@ -1,0 +1,146 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Wrapper from '../components/Wrapper.astro';
+import Space from '../components/Space.astro';
+import SafeModeToggle from '../components/catalog/SafeModeToggle.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const { title, description, ogImage, canonicalUrl } = Astro.props;
+const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
+const fullCanonicalUrl = canonicalUrl || new URL(Astro.url.pathname, siteUrl).toString();
+const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}/images/og-default.jpg`;
+---
+
+<BaseLayout title={`${title} | AI Catalog CIS`}>
+  <Fragment slot="head">
+    <meta name="description" content={description || 'Каталог AI-сервисов для ролеплея и генерации контента'} />
+    <link rel="canonical" href={fullCanonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description || 'Каталог AI-сервисов для ролеплея и генерации контента'} />
+    <meta property="og:image" content={fullOgImage} />
+    <meta property="og:url" content={fullCanonicalUrl} />
+    <meta property="og:locale" content="ru_RU" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description || 'Каталог AI-сервисов для ролеплея и генерации контента'} />
+    <meta name="twitter:image" content={fullOgImage} />
+
+    <!-- Pagefind -->
+    <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+  </Fragment>
+
+  <header slot="header" class="catalog-header">
+    <Wrapper>
+      <div class="catalog-header__inner">
+        <a href="/" class="catalog-header__logo">
+          <span class="catalog-header__logo-icon">🤖</span>
+          <span class="catalog-header__logo-text">AI Catalog</span>
+        </a>
+        <nav class="catalog-header__nav">
+          <a href="/">Каталог</a>
+          <a href="/telegram-bots">Telegram боты</a>
+        </nav>
+        <SafeModeToggle />
+      </div>
+    </Wrapper>
+  </header>
+
+  <Wrapper>
+    <Space size="M" />
+    <slot />
+    <Space size="L" />
+  </Wrapper>
+
+  <footer slot="footer" class="catalog-footer">
+    <Wrapper>
+      <p>© 2025 AI Catalog CIS. Все права защищены.</p>
+      <p class="catalog-footer__disclaimer">
+        Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
+      </p>
+    </Wrapper>
+  </footer>
+</BaseLayout>
+
+<style>
+  .catalog-header {
+    padding: 1em 0;
+    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  .catalog-header__inner {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+  }
+
+  .catalog-header__logo {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    text-decoration: none;
+    color: inherit;
+    font-weight: 600;
+    font-size: 1.2em;
+  }
+
+  .catalog-header__logo-icon {
+    font-size: 1.3em;
+  }
+
+  .catalog-header__nav {
+    display: flex;
+    gap: 1.5em;
+    flex: 1;
+  }
+
+  .catalog-header__nav a {
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+  }
+
+  .catalog-header__nav a:hover {
+    opacity: 1;
+  }
+
+  .catalog-footer {
+    padding: 2em 0;
+    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
+    text-align: center;
+    font-size: 0.9em;
+    opacity: 0.7;
+  }
+
+  .catalog-footer__disclaimer {
+    font-size: 0.85em;
+    margin-top: 0.5em;
+  }
+
+  @media (max-width: 767px) {
+    .catalog-header__inner {
+      flex-wrap: wrap;
+      gap: 1em;
+    }
+
+    .catalog-header__nav {
+      order: 3;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .catalog-header__logo-text {
+      display: none;
+    }
+  }
+</style>

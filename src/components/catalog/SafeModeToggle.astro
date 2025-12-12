@@ -1,0 +1,87 @@
+---
+interface Props {
+  defaultEnabled?: boolean;
+}
+
+const { defaultEnabled = false } = Astro.props;
+---
+
+<button
+  type="button"
+  class="safe-mode-toggle"
+  id="safe-mode-toggle"
+  aria-pressed={defaultEnabled}
+  title="Безопасный режим (размытие NSFW)"
+>
+  <span class="safe-mode-toggle__icon">👁</span>
+  <span class="safe-mode-toggle__label">Safe Mode</span>
+</button>
+
+<style>
+  .safe-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+    padding: 0.4em 0.8em;
+    font-size: 0.85em;
+    font-family: inherit;
+    border: 1px solid rgba(var(--ids__text-RGB), 0.2);
+    border-radius: 2em;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .safe-mode-toggle:hover {
+    border-color: rgba(var(--ids__text-RGB), 0.4);
+    background: rgba(var(--ids__text-RGB), 0.05);
+  }
+
+  .safe-mode-toggle[aria-pressed="true"] {
+    background: rgb(var(--ids__link-RGB));
+    color: white;
+    border-color: rgb(var(--ids__link-RGB));
+  }
+
+  .safe-mode-toggle__icon {
+    font-size: 1.1em;
+  }
+
+  .safe-mode-toggle[aria-pressed="true"] .safe-mode-toggle__icon::after {
+    content: '✓';
+    margin-left: 0.2em;
+    font-size: 0.8em;
+  }
+
+  @media (max-width: 767px) {
+    .safe-mode-toggle__label {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const SAFE_MODE_KEY = 'safeMode';
+  const toggle = document.getElementById('safe-mode-toggle');
+
+  function setSafeMode(enabled: boolean) {
+    localStorage.setItem(SAFE_MODE_KEY, JSON.stringify(enabled));
+    document.body.classList.toggle('safe-mode', enabled);
+    toggle?.setAttribute('aria-pressed', String(enabled));
+  }
+
+  function getSafeMode(): boolean {
+    const stored = localStorage.getItem(SAFE_MODE_KEY);
+    return stored ? JSON.parse(stored) : false;
+  }
+
+  // Инициализация
+  const initialState = getSafeMode();
+  setSafeMode(initialState);
+
+  // Обработчик клика
+  toggle?.addEventListener('click', () => {
+    const current = getSafeMode();
+    setSafeMode(!current);
+  });
+</script>

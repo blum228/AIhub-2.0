@@ -1,0 +1,199 @@
+---
+import { TAGS_BY_CATEGORY, type Tag } from '../../lib/types';
+
+interface Props {
+  selectedTags?: string[];
+}
+
+const { selectedTags = [] } = Astro.props;
+
+const categoryLabels: Record<Tag['category'], string> = {
+  type: 'Тип',
+  language: 'Язык',
+  payment: 'Оплата',
+  access: 'Доступ'
+};
+---
+
+<div class="tag-filter" id="tag-filter">
+  {Object.entries(TAGS_BY_CATEGORY).map(([category, tags]) => (
+    <div class="tag-filter__category">
+      <span class="tag-filter__category-label">{categoryLabels[category as Tag['category']]}</span>
+      <div class="tag-filter__tags">
+        {tags.map(tag => (
+          <button
+            type="button"
+            class:list={['tag-filter__tag', { 'tag-filter__tag--active': selectedTags.includes(tag.id) }]}
+            data-tag={tag.id}
+          >
+            {tag.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  ))}
+  <button type="button" class="tag-filter__clear" id="clear-filters">
+    Сбросить фильтры
+  </button>
+</div>
+
+<style>
+  .tag-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    align-items: flex-start;
+    padding: 1em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: var(--ids__radius);
+    margin-bottom: 1.5em;
+  }
+
+  .tag-filter__category {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4em;
+  }
+
+  .tag-filter__category-label {
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.6;
+  }
+
+  .tag-filter__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em;
+  }
+
+  .tag-filter__tag {
+    padding: 0.35em 0.7em;
+    font-size: 0.85em;
+    font-family: inherit;
+    border: 1px solid rgba(var(--ids__text-RGB), 0.2);
+    border-radius: 0.3em;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .tag-filter__tag:hover {
+    border-color: rgba(var(--ids__link-RGB), 0.5);
+    background: rgba(var(--ids__link-RGB), 0.05);
+  }
+
+  .tag-filter__tag--active {
+    background: rgb(var(--ids__link-RGB));
+    color: white;
+    border-color: rgb(var(--ids__link-RGB));
+  }
+
+  .tag-filter__tag--active:hover {
+    background: rgb(var(--ids__hover-RGB));
+    border-color: rgb(var(--ids__hover-RGB));
+  }
+
+  .tag-filter__clear {
+    padding: 0.35em 0.7em;
+    font-size: 0.85em;
+    font-family: inherit;
+    border: 1px solid rgba(var(--ids__accent-RGB), 0.3);
+    border-radius: 0.3em;
+    background: transparent;
+    color: rgb(var(--ids__accent-RGB));
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto;
+  }
+
+  .tag-filter__clear:hover {
+    background: rgba(var(--ids__accent-RGB), 0.1);
+  }
+
+  @media (max-width: 767px) {
+    .tag-filter {
+      flex-direction: column;
+    }
+
+    .tag-filter__clear {
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+</style>
+
+<script>
+  const filter = document.getElementById('tag-filter');
+  const clearBtn = document.getElementById('clear-filters');
+  const toolCards = document.querySelectorAll('.tool-card');
+
+  let selectedTags: Set<string> = new Set();
+
+  function updateFilter() {
+    // Обновляем активные кнопки
+    filter?.querySelectorAll('.tag-filter__tag').forEach(btn => {
+      const tag = (btn as HTMLElement).dataset.tag;
+      if (tag) {
+        btn.classList.toggle('tag-filter__tag--active', selectedTags.has(tag));
+      }
+    });
+
+    // Фильтруем карточки
+    toolCards.forEach(card => {
+      const cardTags = card.querySelector('[data-pagefind-filter="tags"]')?.textContent || '';
+      const cardTagIds = Array.from(card.querySelectorAll('.tool-card__tag'))
+        .map(el => el.textContent?.toLowerCase() || '');
+
+      // Получаем теги из data-атрибутов карточки
+      const cardElement = card as HTMLElement;
+      const tagsAttr = cardElement.dataset.tags?.split(',') || [];
+
+      const show = selectedTags.size === 0 ||
+        Array.from(selectedTags).every(tag => tagsAttr.includes(tag));
+
+      (card as HTMLElement).style.display = show ? '' : 'none';
+    });
+
+    // Обновляем URL
+    const url = new URL(window.location.href);
+    if (selectedTags.size > 0) {
+      url.searchParams.set('tags', Array.from(selectedTags).join(','));
+    } else {
+      url.searchParams.delete('tags');
+    }
+    history.replaceState(null, '', url.toString());
+  }
+
+  // Клик по тегу
+  filter?.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    if (target.classList.contains('tag-filter__tag')) {
+      const tag = target.dataset.tag;
+      if (tag) {
+        if (selectedTags.has(tag)) {
+          selectedTags.delete(tag);
+        } else {
+          selectedTags.add(tag);
+        }
+        updateFilter();
+      }
+    }
+  });
+
+  // Сброс фильтров
+  clearBtn?.addEventListener('click', () => {
+    selectedTags.clear();
+    updateFilter();
+  });
+
+  // Инициализация из URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const tagsParam = urlParams.get('tags');
+  if (tagsParam) {
+    tagsParam.split(',').forEach(tag => selectedTags.add(tag));
+    updateFilter();
+  }
+</script>

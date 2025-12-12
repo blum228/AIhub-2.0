@@ -1,0 +1,74 @@
+---
+import { getCollection } from 'astro:content';
+import CatalogLayout from '../layouts/CatalogLayout.astro';
+import ToolGrid from '../components/catalog/ToolGrid.astro';
+import Space from '../components/Space.astro';
+import { sortToolsByRating } from '../lib/tools';
+import type { ToolData } from '../lib/types';
+
+// Получаем все инструменты
+const toolsCollection = await getCollection('tools');
+
+// Фильтруем только Telegram боты
+const telegramBots: ToolData[] = toolsCollection
+  .filter(entry => entry.data.tags.includes('telegram-bot'))
+  .map(entry => ({
+    slug: entry.slug,
+    ...entry.data
+  }));
+
+// Сортируем по рейтингу
+const sortedBots = sortToolsByRating(telegramBots);
+---
+
+<CatalogLayout
+  title="Telegram боты"
+  description="AI-боты для Telegram: ролеплей, генерация изображений, чат-боты. Работают без VPN прямо в мессенджере."
+>
+  <section class="page-header">
+    <h1>🤖 Telegram боты</h1>
+    <p class="page-header__subtitle">
+      AI-боты прямо в Telegram. Не нужен VPN, работают на любом устройстве.
+    </p>
+  </section>
+
+  <Space size="M" />
+
+  {sortedBots.length > 0 ? (
+    <ToolGrid tools={sortedBots} />
+  ) : (
+    <div class="empty-state">
+      <p>Пока нет добавленных Telegram ботов.</p>
+      <a href="/">← Вернуться в каталог</a>
+    </div>
+  )}
+</CatalogLayout>
+
+<style>
+  .page-header {
+    text-align: center;
+    padding: 1em 0;
+  }
+
+  .page-header h1 {
+    font-size: 2em;
+    margin-bottom: 0.3em;
+  }
+
+  .page-header__subtitle {
+    font-size: 1.1em;
+    opacity: 0.8;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: var(--ids__radius);
+  }
+
+  .empty-state p {
+    margin-bottom: 1em;
+    opacity: 0.7;
+  }
+</style>

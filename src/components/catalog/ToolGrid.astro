@@ -1,0 +1,37 @@
+---
+import Sequence from '../Sequence.astro';
+import SequenceItem from '../SequenceItem.astro';
+import ToolCard from './ToolCard.astro';
+import type { ToolData } from '../../lib/types';
+
+interface Props {
+  tools: ToolData[];
+  columns?: 'S' | 'M' | 'L';
+}
+
+const { tools, columns = 'M' } = Astro.props;
+---
+
+<Sequence size={columns} gap="M" class="tool-grid">
+  {tools.map(tool => (
+    <SequenceItem>
+      <ToolCard
+        slug={tool.slug}
+        title={tool.title}
+        shortDescription={tool.shortDescription}
+        coverImage={tool.coverImage}
+        gifPreview={tool.gifPreview}
+        priceModel={tool.priceModel}
+        tags={tool.tags}
+        isNsfw={tool.isNsfw}
+        telegramBotLink={tool.telegramBotLink}
+      />
+    </SequenceItem>
+  ))}
+</Sequence>
+
+<style>
+  :global(.tool-grid) {
+    margin-bottom: 2em;
+  }
+</style>
