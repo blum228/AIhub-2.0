@@ -1,26 +1,49 @@
 ---
 /**
- * Landing Page
- * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6
+ * Landing Page — AI Девушки
+ * SEO: главная страница с фокусом на AI girlfriends
  */
 import CatalogLayout from '../layouts/CatalogLayout.astro';
 import Space from '../components/Space.astro';
 import HeroSection from '../components/landing/HeroSection.astro';
 import CategoryCards from '../components/landing/CategoryCards.astro';
 import BlogPreview from '../components/landing/BlogPreview.astro';
+
+// Schema.org для главной
+const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "AI Каталог — AI Девушки и виртуальные подруги",
+  "url": siteUrl,
+  "description": "Рейтинг лучших AI девушек и сервисов для общения с виртуальными подругами.",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": `${siteUrl}/catalog?q={search_term_string}`,
+    "query-input": "required name=search_term_string"
+  }
+};
 ---
 
 <CatalogLayout
-  title="AI Каталог СНГ — Лучшие AI-сервисы"
-  description="Каталог AI-сервисов для русскоязычной аудитории. Фильтры по оплате картами РФ, поддержке русского языка и доступности без VPN."
+  title="AI Девушки — Лучшие AI-сервисы для общения | AI Каталог"
+  description="Рейтинг лучших AI девушек 2024. Candy AI, CrushOn AI, Replika. Оплата картами РФ, без VPN."
 >
-  <HeroSection />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  
+  <HeroSection 
+    headline="Найди свою AI-девушку"
+    description="Помогаем выбрать сервис для общения с AI. Честные сравнения, фильтры по доступности из России, рекомендации под твой сценарий."
+    ctaText="Смотреть каталог"
+    ctaLink="/catalog"
+  />
   
   <CategoryCards title="Категории" />
   
-  <Space size="L" />
+  <Space size="XL" />
   
   <BlogPreview title="Из блога" />
-  
-  <Space size="L" />
 </CatalogLayout>
+
+
+

@@ -4,7 +4,6 @@
  * Requirements: 1.3
  */
 import { getCollection } from 'astro:content';
-import Space from '../Space.astro';
 import Sequence from '../Sequence.astro';
 import SequenceItem from '../SequenceItem.astro';
 import CategoryCard from '../catalog/CategoryCard.astro';
@@ -37,7 +36,6 @@ const tools: ToolData[] = toolsCollection.map(entry => ({
 {collections.length > 0 && (
   <section class="category-cards">
     <h2 class="category-cards__title">{title}</h2>
-    <Space size="M" />
     <Sequence size="L" gap="M">
       {collections.map(col => (
         <SequenceItem>

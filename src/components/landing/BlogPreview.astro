@@ -4,7 +4,6 @@
  * Отображает до 3 последних постов
  * Requirements: 1.5
  */
-import Space from '../Space.astro';
 import Sequence from '../Sequence.astro';
 import SequenceItem from '../SequenceItem.astro';
 import BlogCard from '../blog/BlogCard.astro';
@@ -26,7 +25,6 @@ const posts = await getRecentBlogPosts(count);
       <h2 class="blog-preview__title">{title}</h2>
       <a href="/blog" class="blog-preview__link">Все статьи →</a>
     </div>
-    <Space size="M" />
     <Sequence size="L" gap="M">
       {posts.map(post => (
         <SequenceItem>
@@ -42,6 +40,7 @@ const posts = await getRecentBlogPosts(count);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 1.2em;
   }
 
   .blog-preview__title {

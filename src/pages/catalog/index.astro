@@ -34,6 +34,7 @@ const sortedTools = sortToolsByRating(tools);
       Лучшие AI-сервисы для ролеплея и генерации контента.<br />
       Фильтры по оплате картами РФ, поддержке русского языка и доступности без VPN.
     </p>
+    <Space size="M" />
     <SearchWidget placeholder="Поиск по названию или описанию..." />
   </TextWidth>
 
@@ -42,10 +43,12 @@ const sortedTools = sortToolsByRating(tools);
   <!-- Фильтры -->
   <TagFilter />
 
-  <Space size="M" />
+  <Space size="L" />
 
   <!-- Основная сетка -->
   <ToolGrid tools={sortedTools} />
+  
+  <Space size="XL" />
 
 
 </CatalogLayout>
