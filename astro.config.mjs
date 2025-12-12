@@ -6,7 +6,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ai-catalog.ru',
+  site: 'https://blum228.github.io',
+  base: '/Athub-2.0',
   output: 'static',
   integrations: [
     mdx(),
