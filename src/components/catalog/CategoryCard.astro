@@ -14,7 +14,8 @@ interface Props {
 const { slug, title, description } = Astro.props;
 ---
 
-<a href={`/category/${slug}`} class="collection-card">
+<a href={`/category/${slug}`} class="collection-card spotlight-card">
+  <div class="spotlight-overlay"></div>
   <h3 class="collection-card__title">{title}</h3>
   <p class="collection-card__desc">{description}</p>
   <span class="collection-card__link">Смотреть →</span>
@@ -22,6 +23,7 @@ const { slug, title, description } = Astro.props;
 
 <style>
   .collection-card {
+    position: relative;
     display: flex;
     flex-direction: column;
     text-decoration: none;
@@ -33,6 +35,24 @@ const { slug, title, description } = Astro.props;
     transition: 
       background 0.3s ease,
       transform 0.3s ease;
+    overflow: hidden;
+  }
+  
+  .spotlight-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      var(--spotlight-color, rgba(var(--ids__link-RGB), 0.15)),
+      transparent 40%
+    );
+  }
+  
+  .collection-card:hover .spotlight-overlay {
+    opacity: 1;
   }
   
   .collection-card:hover {
@@ -41,6 +61,7 @@ const { slug, title, description } = Astro.props;
   }
   
   .collection-card__title {
+    position: relative;
     font-size: 1.8em;
     font-weight: 700;
     margin: 0 0 0.4em;
@@ -50,6 +71,7 @@ const { slug, title, description } = Astro.props;
   }
   
   .collection-card__desc {
+    position: relative;
     font-size: 1em;
     line-height: 1.5;
     margin: 0;
@@ -58,6 +80,7 @@ const { slug, title, description } = Astro.props;
   }
   
   .collection-card__link {
+    position: relative;
     font-size: 0.9em;
     font-weight: 500;
     color: rgba(var(--ids__text-RGB), 0.35);
@@ -80,3 +103,20 @@ const { slug, title, description } = Astro.props;
     }
   }
 </style>
+
+<script>
+  function initSpotlight() {
+    document.querySelectorAll('.spotlight-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = (card as HTMLElement).getBoundingClientRect();
+        const x = (e as MouseEvent).clientX - rect.left;
+        const y = (e as MouseEvent).clientY - rect.top;
+        (card as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
+        (card as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+  }
+  
+  initSpotlight();
+  document.addEventListener('astro:page-load', initSpotlight);
+</script>

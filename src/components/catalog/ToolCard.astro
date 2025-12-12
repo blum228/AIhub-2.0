@@ -1,5 +1,4 @@
 ---
-import Rounded from '../Rounded.astro';
 import PlaceholderImage from './PlaceholderImage.astro';
 
 interface Props {
@@ -27,7 +26,7 @@ const primaryCategory = tags.find(t => ['chatbot', 'image-gen', 'telegram-bot', 
 
 <article class="tool-card" data-pagefind-body data-tags={tags.join(',')}>
   <a href={`/tool/${slug}`} class="tool-card__link">
-    <Rounded class="tool-card__image-wrapper">
+    <div class="tool-card__image-wrapper">
       <div class="tool-card__image-container">
         {needsPlaceholder ? (
           <PlaceholderImage title={title} category={primaryCategory} />
@@ -48,7 +47,7 @@ const primaryCategory = tags.find(t => ['chatbot', 'image-gen', 'telegram-bot', 
           </div>
         )}
       </div>
-    </Rounded>
+    </div>
 
     <div class="tool-card__content">
       <h3 class="tool-card__title" data-pagefind-meta="title">{title}</h3>
@@ -80,6 +79,32 @@ const primaryCategory = tags.find(t => ['chatbot', 'image-gen', 'telegram-bot', 
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background: rgb(var(--ids__surface-RGB));
+    border-radius: 16px;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --spotlight-color: rgba(var(--ids__text-RGB), 0.25);
+  }
+
+  .tool-card__image-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y),
+      var(--spotlight-color),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  .tool-card__image-wrapper:hover::before {
+    opacity: 1;
   }
 
   .tool-card__image-container {
@@ -135,18 +160,35 @@ const primaryCategory = tags.find(t => ['chatbot', 'image-gen', 'telegram-bot', 
 </style>
 
 <script>
-  document.querySelectorAll('.tool-card__image[data-gif]').forEach(img => {
-    const imgEl = img as HTMLImageElement;
-    const staticSrc = imgEl.dataset.static;
-    const gifSrc = imgEl.dataset.gif;
+  function initToolCardEffects() {
+    // GIF preview on hover
+    document.querySelectorAll('.tool-card__image[data-gif]').forEach(img => {
+      const imgEl = img as HTMLImageElement;
+      const staticSrc = imgEl.dataset.static;
+      const gifSrc = imgEl.dataset.gif;
 
-    if (staticSrc && gifSrc) {
-      imgEl.closest('.tool-card')?.addEventListener('mouseenter', () => {
-        imgEl.src = gifSrc;
+      if (staticSrc && gifSrc) {
+        imgEl.closest('.tool-card')?.addEventListener('mouseenter', () => {
+          imgEl.src = gifSrc;
+        });
+        imgEl.closest('.tool-card')?.addEventListener('mouseleave', () => {
+          imgEl.src = staticSrc;
+        });
+      }
+    });
+
+    // Spotlight effect on image wrapper
+    document.querySelectorAll('.tool-card__image-wrapper').forEach(wrapper => {
+      wrapper.addEventListener('mousemove', (e) => {
+        const rect = (wrapper as HTMLElement).getBoundingClientRect();
+        const x = (e as MouseEvent).clientX - rect.left;
+        const y = (e as MouseEvent).clientY - rect.top;
+        (wrapper as HTMLElement).style.setProperty('--mouse-x', `${x}px`);
+        (wrapper as HTMLElement).style.setProperty('--mouse-y', `${y}px`);
       });
-      imgEl.closest('.tool-card')?.addEventListener('mouseleave', () => {
-        imgEl.src = staticSrc;
-      });
-    }
-  });
+    });
+  }
+
+  initToolCardEffects();
+  document.addEventListener('astro:page-load', initToolCardEffects);
 </script>

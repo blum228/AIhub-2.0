@@ -41,9 +41,9 @@ const letters = text.split('');
 .btn-53 {
   -webkit-tap-highlight-color: transparent;
   -webkit-appearance: button;
-  background-color: #000;
+  background-color: rgb(var(--ids__text-RGB));
   background-image: none;
-  color: #fff;
+  color: rgb(var(--ids__background-RGB));
   cursor: pointer;
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
@@ -74,7 +74,7 @@ const letters = text.split('');
 }
 
 .btn-53 {
-  border: 1px solid #000;
+  border: 1px solid rgb(var(--ids__text-RGB));
   border-radius: 999px;
   box-sizing: border-box;
   display: inline-block;
@@ -86,12 +86,12 @@ const letters = text.split('');
 }
 
 .btn-53:hover {
-  border-color: #000;
+  border-color: rgb(var(--ids__text-RGB));
 }
 
 .btn-53 .original {
-  background: #fff;
-  color: #000 !important;
+  background: rgb(var(--ids__background-RGB));
+  color: rgb(var(--ids__text-RGB)) !important;
   display: grid;
   inset: 0;
   place-content: center;

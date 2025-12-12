@@ -1,13 +1,13 @@
 
 :root {
-  --ids__text-RGB:        5, 5, 5;
-  --ids__link-RGB:        5, 5, 5;
-  --ids__hover-RGB:       5, 5, 5;
-  --ids__accent-RGB:      5, 5, 5;
-  --ids__code-RGB:        115, 120, 125;
+  --ids__text-RGB:        250, 250, 250;
+  --ids__link-RGB:        250, 250, 250;
+  --ids__hover-RGB:       250, 250, 250;
+  --ids__accent-RGB:      250, 250, 250;
+  --ids__code-RGB:        140, 135, 130;
   --ids__mark-RGB:        255, 225, 0;
-  --ids__surface-RGB:     238, 240, 242;
-  --ids__background-RGB:  255, 255, 255;
+  --ids__surface-RGB:     17, 15, 13;
+  --ids__background-RGB:  0, 0, 0;
 }
 
 body {

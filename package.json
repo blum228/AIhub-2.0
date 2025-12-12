@@ -19,6 +19,7 @@
     "@keystatic/astro": "^5.0.1",
     "@keystatic/core": "^0.5.36",
     "astro": "^4.16.18",
+    "motion": "^12.23.26",
     "pagefind": "^1.2.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
