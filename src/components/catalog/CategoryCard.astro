@@ -15,10 +15,7 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
 
 <a href={`/category/${slug}`} class:list={['category-card', { 'category-card--featured': featured }]}>
   <Rounded class="category-card__inner">
-    <div class="category-card__content">
-      <h3 class="category-card__title">{title}</h3>
-      <p class="category-card__description">{description}</p>
-    </div>
+    <h3 class="category-card__title">{title}</h3>
     <span class="category-card__count">{toolCount}</span>
   </Rounded>
 </a>
@@ -33,57 +30,46 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
   .category-card :global(.category-card__inner) {
     display: flex;
     align-items: center;
-    gap: calc(var(--ids__density) * 0.6em);
-    padding: calc(var(--ids__density) * 0.6em) calc(var(--ids__density) * 0.8em);
+    justify-content: space-between;
+    gap: 1em;
+    padding: 1em 1.25em;
     background: rgb(var(--ids__surface-RGB));
     height: 100%;
+    transition: background 0.2s ease;
+  }
+
+  .category-card:hover :global(.category-card__inner) {
+    background: rgba(var(--ids__surface-RGB), 0.7);
   }
 
   .category-card--featured :global(.category-card__inner) {
-    background: rgb(var(--ids__surface-RGB));
     border: 1px solid rgba(var(--ids__text-RGB), 0.1);
-  }
-
-  .category-card__content {
-    flex: 1;
-    min-width: 0;
   }
 
   .category-card__title {
     font-size: 1.1em;
     font-weight: 600;
-    margin: 0 0 0.2em;
+    margin: 0;
     line-height: 1.2;
+    color: rgba(var(--ids__text-RGB), 0.6);
+    transition: color 0.5s ease;
   }
 
-  .category-card__description {
-    font-size: 0.85em;
-    opacity: 0.7;
-    margin: 0;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .category-card:hover .category-card__title {
+    color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
   }
 
   .category-card__count {
     flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 2em;
-    height: 2em;
-    padding: 0 0.5em;
-    font-size: 0.9em;
+    font-size: 0.85em;
     font-weight: 600;
-    background: rgba(var(--ids__text-RGB), 0.1);
-    border-radius: var(--ids__radius);
+    color: rgba(var(--ids__text-RGB), 0.6);
+    transition: color 0.5s ease;
   }
 
-  @media (max-width: 767px) {
-    .category-card__description {
-      display: none;
-    }
+  .category-card:hover .category-card__count {
+    color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
   }
 </style>

@@ -36,8 +36,7 @@ const collections: CollectionData[] = sortCollectionsByOrder(
   }))
 );
 
-// Выделяем Telegram боты для featured секции
-const telegramBots = sortedTools.filter(t => t.tags.includes('telegram-bot')).slice(0, 4);
+
 ---
 
 <CatalogLayout
@@ -86,24 +85,5 @@ const telegramBots = sortedTools.filter(t => t.tags.includes('telegram-bot')).sl
   <Space size="S" />
   <ToolGrid tools={sortedTools} />
 
-  <!-- Featured: Telegram боты -->
-  {telegramBots.length > 0 && (
-    <>
-      <Space size="L" />
-      <Rounded>
-        <aside>
-          <Sequence size="XL" gap="S">
-            <SequenceItem>
-              <h3>Telegram боты</h3>
-            </SequenceItem>
-            <SequenceItem>
-              <a href="/telegram-bots">Все боты</a>
-            </SequenceItem>
-          </Sequence>
-          <Space size="S" />
-          <ToolGrid tools={telegramBots} />
-        </aside>
-      </Rounded>
-    </>
-  )}
+
 </CatalogLayout>
