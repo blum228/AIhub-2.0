@@ -1,14 +1,20 @@
 ---
 import { getCollection } from 'astro:content';
 import ToolLayout from '../../layouts/ToolLayout.astro';
+import Wrapper from '../../components/Wrapper.astro';
 import Rounded from '../../components/Rounded.astro';
 import Space from '../../components/Space.astro';
 import TextWidth from '../../components/TextWidth.astro';
+import Sequence from '../../components/Sequence.astro';
+import SequenceItem from '../../components/SequenceItem.astro';
+import Button from '../../components/Button.astro';
 import Breadcrumbs from '../../components/catalog/Breadcrumbs.astro';
-import PaymentGuide from '../../components/catalog/PaymentGuide.astro';
-import RelatedTools from '../../components/catalog/RelatedTools.astro';
-import TelegramGuide from '../../components/catalog/TelegramGuide.astro';
 import AccessInfo from '../../components/catalog/AccessInfo.astro';
+import PaymentGuide from '../../components/catalog/PaymentGuide.astro';
+import TelegramGuide from '../../components/catalog/TelegramGuide.astro';
+import RelatedTools from '../../components/catalog/RelatedTools.astro';
+import AccessBadges from '../../components/catalog/AccessBadges.astro';
+import PaymentBadges from '../../components/catalog/PaymentBadges.astro';
 import { TAGS_BY_ID, PRICE_MODEL_LABELS, type ToolData } from '../../lib/types';
 import { getPrimaryCollection, sortCollectionsByOrder, type CollectionData } from '../../lib/collections';
 
@@ -23,20 +29,17 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await entry.render();
 
-// Данные инструмента
 const tool: ToolData = {
   slug: entry.slug,
   ...entry.data
 };
 
-// Все инструменты для Related
 const allToolsCollection = await getCollection('tools');
 const allTools: ToolData[] = allToolsCollection.map(e => ({
   slug: e.slug,
   ...e.data
 }));
 
-// Коллекции для breadcrumbs
 const collectionsEntries = await getCollection('collections');
 const collections: CollectionData[] = sortCollectionsByOrder(
   collectionsEntries.map(e => ({
@@ -45,10 +48,8 @@ const collections: CollectionData[] = sortCollectionsByOrder(
   }))
 );
 
-// Определяем primary collection для breadcrumbs
 const primaryCollection = getPrimaryCollection(tool, collections);
 
-// Breadcrumbs items
 const breadcrumbItems = [
   { label: 'Каталог', href: '/catalog' },
   ...(primaryCollection ? [{ label: primaryCollection.title, href: `/category/${primaryCollection.slug}` }] : []),
@@ -57,8 +58,8 @@ const breadcrumbItems = [
 
 const priceLabel = PRICE_MODEL_LABELS[tool.priceModel];
 const tagLabels = tool.tags.map(id => TAGS_BY_ID[id]?.label || id);
+const isTelegramBot = tool.tags.includes('telegram-bot');
 
-// Schema.org BreadcrumbList
 const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
 const breadcrumbSchema = {
   "@context": "https://schema.org",
@@ -79,125 +80,258 @@ const breadcrumbSchema = {
     }
   ]
 };
+
+// Ключевые особенности для быстрого сканирования
+const highlights = [
+  tool.supportsRussian && { icon: '🇷🇺', label: 'Русский язык', desc: 'Поддерживает русский' },
+  !tool.requiresVpn && { icon: '🌐', label: 'Без VPN', desc: 'Доступен из России' },
+  tool.acceptsRussianCards && { icon: '💳', label: 'Карты РФ', desc: 'Принимает оплату' },
+  tool.rating && { icon: '⭐', label: tool.rating.toFixed(1), desc: 'Рейтинг' },
+].filter(Boolean);
 ---
 
 <ToolLayout tool={tool}>
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
   
-  <Breadcrumbs items={breadcrumbItems} />
-  <Space size="S" />
-  
   <article class="tool-page">
-    <!-- Header -->
-    <header class="tool-page__header">
-      <Rounded class="tool-page__cover">
-        <img
-          src={tool.coverImage}
-          alt={tool.title}
-          class:list={['tool-page__image', { 'nsfw-image': tool.isNsfw }]}
-        />
-      </Rounded>
-
-      <Space size="M" />
-
-      <h1>{tool.title}</h1>
-      <p class="loud">{tool.shortDescription}</p>
-
-      <Space size="S" />
-
-      <aside class="tool-page__meta">
-        <p>
-          <mark>{priceLabel}</mark>
-          {tool.rating !== undefined && <> · ⭐ {tool.rating.toFixed(1)}</>}
-          {tool.supportsRussian && <> · 🇷🇺 Русский</>}
-          {!tool.requiresVpn && <> · ✓ Без VPN</>}
-          {tool.acceptsRussianCards && <> · 💳 Карты РФ</>}
-        </p>
-        <p>{tagLabels.join(' · ')}</p>
-      </aside>
-
-      <Space size="S" />
-
-      <p class="ids__promo-link">
-        <a href={tool.affiliateLink} target="_blank" rel="noopener sponsored">
-          Перейти к сервису →
-        </a>
-        {tool.tags.includes('telegram-bot') && tool.telegramBotLink && (
-          <a href={tool.telegramBotLink} target="_blank" rel="noopener">
-            Открыть в Telegram
-          </a>
-        )}
-      </p>
-    </header>
+    <!-- Hero Section -->
+    <section class="tool-hero">
+      <Wrapper size="L">
+        <Breadcrumbs items={breadcrumbItems} />
+        <Space size="M" />
+        
+        <div class="tool-hero__grid">
+          <div class="tool-hero__media">
+            <Rounded class="tool-hero__cover">
+              <img
+                src={tool.coverImage}
+                alt={`${tool.title} — интерфейс сервиса`}
+                class:list={['tool-hero__image', { 'nsfw-image': tool.isNsfw }]}
+                loading="eager"
+              />
+            </Rounded>
+          </div>
+          
+          <div class="tool-hero__content">
+            <div class="tool-hero__badges">
+              <mark class="tool-hero__price">{priceLabel}</mark>
+              {tool.priceFrom && tool.priceModel !== 'free' && (
+                <span class="tool-hero__price-from">от ${tool.priceFrom}/мес</span>
+              )}
+            </div>
+            
+            <h1 class="tool-hero__title">{tool.title}</h1>
+            <p class="tool-hero__description">{tool.shortDescription}</p>
+            
+            <div class="tool-hero__tags">
+              {tagLabels.map(tag => (
+                <span class="tool-hero__tag">{tag}</span>
+              ))}
+            </div>
+            
+            <Space size="S" />
+            
+            <div class="tool-hero__actions">
+              <Button href={tool.affiliateLink} variant="primary" size="L">
+                Перейти к сервису →
+              </Button>
+              {isTelegramBot && tool.telegramBotLink && (
+                <Button href={tool.telegramBotLink} variant="secondary" size="L">
+                  Открыть в Telegram
+                </Button>
+              )}
+            </div>
+          </div>
+        </div>
+      </Wrapper>
+    </section>
 
     <Space size="L" />
 
-    <!-- Content -->
-    <TextWidth>
-      <section class="tool-page__content prose">
-        <Content />
+    <!-- Quick Highlights -->
+    {highlights.length > 0 && (
+      <section class="tool-highlights">
+        <Wrapper size="L">
+          <Sequence size="L" gap="M">
+            {highlights.map(item => item && (
+              <SequenceItem>
+                <aside class="highlight-card">
+                  <span class="highlight-card__icon">{item.icon}</span>
+                  <div class="highlight-card__text">
+                    <strong class="highlight-card__label">{item.label}</strong>
+                    <span class="highlight-card__desc">{item.desc}</span>
+                  </div>
+                </aside>
+              </SequenceItem>
+            ))}
+          </Sequence>
+        </Wrapper>
       </section>
-    </TextWidth>
+    )}
 
-    <Space size="M" />
+    <Space size="L" />
 
-    <!-- Telegram Guide (for telegram bots) -->
-    {tool.tags.includes('telegram-bot') && tool.telegramBotLink && (
+    <!-- Main Content -->
+    <section class="tool-content">
+      <Wrapper size="L">
+        <div class="tool-content__grid">
+          <div class="tool-content__main">
+            <TextWidth>
+              <div class="prose">
+                <Content />
+              </div>
+            </TextWidth>
+          </div>
+          
+          <aside class="tool-content__sidebar">
+            <!-- Quick Access Card -->
+            <div class="sidebar-card">
+              <h4 class="sidebar-card__title">Доступ из России</h4>
+              <div class="sidebar-card__badges">
+                <AccessBadges 
+                  requiresVpn={tool.requiresVpn} 
+                  supportsRussian={tool.supportsRussian} 
+                />
+                <PaymentBadges 
+                  acceptsRussianCards={tool.acceptsRussianCards}
+                  paymentMethods={tool.paymentMethods}
+                  priceModel={tool.priceModel}
+                />
+              </div>
+              
+              <Space size="S" />
+              
+              <ul class="sidebar-card__list">
+                <li>
+                  {tool.requiresVpn ? '⚠️ Требуется VPN' : '✅ Работает без VPN'}
+                </li>
+                <li>
+                  {tool.acceptsRussianCards ? '✅ Карты РФ принимаются' : '❌ Карты РФ не принимаются'}
+                </li>
+                {tool.supportsRussian && <li>🇷🇺 Есть русский язык</li>}
+              </ul>
+            </div>
+            
+            <!-- CTA Card -->
+            <div class="sidebar-card sidebar-card--cta">
+              <p class="sidebar-card__cta-text">Готовы попробовать?</p>
+              <Button href={tool.affiliateLink} variant="primary" size="M">
+                Открыть {tool.title}
+              </Button>
+            </div>
+          </aside>
+        </div>
+      </Wrapper>
+    </section>
+
+    <Space size="L" />
+
+    <!-- Telegram Guide -->
+    {isTelegramBot && tool.telegramBotLink && (
       <>
-        <TelegramGuide botLink={tool.telegramBotLink} botName={tool.title} />
-        <Space size="M" />
+        <Wrapper size="L">
+          <TelegramGuide botLink={tool.telegramBotLink} botName={tool.title} />
+        </Wrapper>
+        <Space size="L" />
       </>
     )}
 
-    <!-- Access Info -->
-    <AccessInfo
-      requiresVpn={tool.requiresVpn}
-      acceptsRussianCards={tool.acceptsRussianCards}
-      paymentMethods={tool.paymentMethods}
-      supportsRussian={tool.supportsRussian}
-    />
+    <!-- Access & Payment Info -->
+    <section class="tool-access">
+      <Wrapper size="L">
+        <h2>Как получить доступ из России</h2>
+        <Space size="M" />
+        <div class="tool-access__grid">
+          <AccessInfo
+            requiresVpn={tool.requiresVpn}
+            acceptsRussianCards={tool.acceptsRussianCards}
+            paymentMethods={tool.paymentMethods}
+            supportsRussian={tool.supportsRussian}
+          />
+          <PaymentGuide
+            acceptsRussianCards={tool.acceptsRussianCards}
+            paymentMethods={tool.paymentMethods}
+          />
+        </div>
+      </Wrapper>
+    </section>
 
-    <Space size="M" />
+    <Space size="L" />
 
-    <!-- Payment Guide -->
-    <PaymentGuide
-      acceptsRussianCards={tool.acceptsRussianCards}
-      paymentMethods={tool.paymentMethods}
-    />
-
-    <Space size="M" />
-
-    <!-- FAQ -->
+    <!-- FAQ Section -->
     {tool.faq && tool.faq.length > 0 && (
-      <section class="tool-page__faq">
-        <h2>Часто задаваемые вопросы</h2>
-        <Space size="S" />
-        {tool.faq.map(item => (
-          <details class="faq-item">
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
+      <section class="tool-faq">
+        <Wrapper size="L">
+          <h2>Часто задаваемые вопросы о {tool.title}</h2>
+          <Space size="M" />
+          <div class="faq-list">
+            {tool.faq.map((item, index) => (
+              <details class="faq-item" open={index === 0}>
+                <summary class="faq-item__question">{item.question}</summary>
+                <p class="faq-item__answer">{item.answer}</p>
+              </details>
+            ))}
+          </div>
+        </Wrapper>
       </section>
     )}
 
-    <Space size="M" />
+    <Space size="L" />
 
-    <!-- Related -->
-    <RelatedTools currentTool={tool} allTools={allTools} />
+    <!-- Related Tools -->
+    <section class="tool-related">
+      <Wrapper size="L">
+        <RelatedTools currentTool={tool} allTools={allTools} limit={4} />
+      </Wrapper>
+    </section>
+    
+    <Space size="XL" />
   </article>
 </ToolLayout>
 
+
 <style>
-  .tool-page__cover {
-    max-width: 600px;
-    overflow: hidden;
+  /* Hero Section */
+  .tool-hero {
+    padding-top: 1em;
   }
 
-  .tool-page__image {
+  .tool-hero__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3em;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .tool-hero__grid {
+      grid-template-columns: 1fr;
+      gap: 2em;
+    }
+  }
+
+  .tool-hero__media {
+    position: sticky;
+    top: 2em;
+  }
+
+  @media (max-width: 900px) {
+    .tool-hero__media {
+      position: static;
+    }
+  }
+
+  .tool-hero__cover {
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  }
+
+  .tool-hero__image {
     width: 100%;
     height: auto;
     display: block;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
     transition: filter 0.3s ease;
   }
 
@@ -205,24 +339,274 @@ const breadcrumbSchema = {
     filter: blur(20px);
   }
 
-  .tool-page__meta p {
-    margin: 0 0 0.3em;
+  .tool-hero__badges {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    margin-bottom: 0.75em;
+  }
+
+  .tool-hero__price {
+    font-size: 0.9em;
+    padding: 0.3em 0.6em;
+    border-radius: 0.3em;
+  }
+
+  .tool-hero__price-from {
+    font-size: 0.9em;
+    opacity: 0.7;
+  }
+
+  .tool-hero__title {
+    font-size: 2.8em;
+    line-height: 1.1;
+    margin-bottom: 0.3em;
+  }
+
+  @media (max-width: 767px) {
+    .tool-hero__title {
+      font-size: 2em;
+    }
+  }
+
+  .tool-hero__description {
+    font-size: 1.3em;
+    line-height: 1.4;
+    opacity: 0.85;
+    margin-bottom: 1em;
+  }
+
+  @media (max-width: 767px) {
+    .tool-hero__description {
+      font-size: 1.1em;
+    }
+  }
+
+  .tool-hero__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .tool-hero__tag {
+    font-size: 0.85em;
+    padding: 0.25em 0.6em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: 0.3em;
+    opacity: 0.8;
+  }
+
+  .tool-hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75em;
+  }
+
+  /* Highlights */
+  .highlight-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 1em 1.25em;
+    height: 100%;
+  }
+
+  .highlight-card__icon {
+    font-size: 1.8em;
+    flex-shrink: 0;
+  }
+
+  .highlight-card__text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .highlight-card__label {
+    font-size: 1.1em;
+    font-weight: 600;
+  }
+
+  .highlight-card__desc {
+    font-size: 0.85em;
+    opacity: 0.7;
+  }
+
+  /* Content Grid */
+  .tool-content__grid {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 3em;
+    align-items: start;
+  }
+
+  @media (max-width: 1000px) {
+    .tool-content__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .tool-content__main {
+    min-width: 0;
+  }
+
+  .tool-content__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+    position: sticky;
+    top: 2em;
+  }
+
+  @media (max-width: 1000px) {
+    .tool-content__sidebar {
+      position: static;
+      flex-direction: row;
+      flex-wrap: wrap;
+    }
+
+    .tool-content__sidebar > * {
+      flex: 1;
+      min-width: 280px;
+    }
+  }
+
+  /* Sidebar Cards */
+  .sidebar-card {
+    padding: 1.25em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: var(--ids__radius);
+  }
+
+  .sidebar-card__title {
+    font-size: 1em;
+    font-weight: 600;
+    margin: 0 0 0.75em;
+  }
+
+  .sidebar-card__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .sidebar-card__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .sidebar-card__list li {
+    padding: 0.4em 0;
+    font-size: 0.9em;
+    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.08);
+  }
+
+  .sidebar-card__list li:last-child {
+    border-bottom: none;
+  }
+
+  .sidebar-card--cta {
+    text-align: center;
+    background: rgba(var(--ids__text-RGB), 0.03);
+    border: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  .sidebar-card__cta-text {
+    margin: 0 0 0.75em;
+    font-weight: 500;
+  }
+
+  /* Access Section */
+  .tool-access__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5em;
+  }
+
+  /* FAQ */
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75em;
   }
 
   .faq-item {
-    padding: calc(var(--ids__density) * 0.6em);
+    padding: 1em 1.25em;
     background: rgb(var(--ids__surface-RGB));
     border-radius: var(--ids__radius);
-    margin-bottom: 0.5em;
-  }
-
-  .faq-item summary {
-    font-weight: 600;
     cursor: pointer;
+    transition: background 0.2s ease;
   }
 
-  .faq-item p {
-    margin: 0.5em 0 0;
-    opacity: 0.9;
+  .faq-item:hover {
+    background: rgba(var(--ids__surface-RGB), 0.7);
+  }
+
+  .faq-item[open] {
+    background: rgba(var(--ids__surface-RGB), 0.7);
+  }
+
+  .faq-item__question {
+    font-weight: 600;
+    font-size: 1.05em;
+    line-height: 1.4;
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em;
+  }
+
+  .faq-item__question::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item__question::after {
+    content: '+';
+    font-size: 1.3em;
+    font-weight: 400;
+    opacity: 0.5;
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+  }
+
+  .faq-item[open] .faq-item__question::after {
+    transform: rotate(45deg);
+  }
+
+  .faq-item__answer {
+    margin: 0.75em 0 0;
+    line-height: 1.6;
+    opacity: 0.85;
+  }
+
+  /* Prose styles */
+  .prose {
+    line-height: 1.7;
+  }
+
+  .prose h2 {
+    margin-top: 1.5em;
+  }
+
+  .prose h3 {
+    margin-top: 1.25em;
+  }
+
+  .prose ul,
+  .prose ol {
+    margin-bottom: 1em;
+  }
+
+  .prose table {
+    width: 100%;
+    margin: 1.5em 0;
+  }
+
+  /* Related section override */
+  .tool-related :global(.related-tools) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
   }
 </style>
