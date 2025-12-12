@@ -1,0 +1,197 @@
+---
+import type { ToolData } from '../../lib/types';
+import { PRICE_MODEL_LABELS } from '../../lib/types';
+
+interface Props {
+  tools: ToolData[];
+}
+
+const { tools } = Astro.props;
+---
+
+{tools.length > 0 && (
+  <section class="comparison-table-section">
+    <h3 class="comparison-table__title">Сравнение сервисов</h3>
+    <div class="comparison-table-wrapper">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Карты РФ</th>
+            <th>VPN</th>
+            <th>Русский</th>
+            <th>Рейтинг</th>
+          </tr>
+        </thead>
+        <tbody>
+          {tools.map(tool => (
+            <tr class="comparison-table__row">
+              <td>
+                <a href={`/tool/${tool.slug}`} class="comparison-table__link">
+                  {tool.title}
+                </a>
+              </td>
+              <td>
+                <span class:list={['comparison-table__price', `comparison-table__price--${tool.priceModel}`]}>
+                  {PRICE_MODEL_LABELS[tool.priceModel]}
+                </span>
+              </td>
+              <td class="comparison-table__icon-cell">
+                {tool.acceptsRussianCards ? (
+                  <span class="comparison-table__yes" title="Да">✅</span>
+                ) : (
+                  <span class="comparison-table__no" title="Нет">❌</span>
+                )}
+              </td>
+              <td class="comparison-table__icon-cell">
+                {tool.requiresVpn ? (
+                  <span class="comparison-table__warning" title="Нужен VPN">⚠️</span>
+                ) : (
+                  <span class="comparison-table__yes" title="Без VPN">✅</span>
+                )}
+              </td>
+              <td class="comparison-table__icon-cell">
+                {tool.supportsRussian ? (
+                  <span class="comparison-table__yes" title="Да">✅</span>
+                ) : (
+                  <span class="comparison-table__no" title="Нет">❌</span>
+                )}
+              </td>
+              <td class="comparison-table__rating">
+                {tool.rating !== undefined ? (
+                  <span>⭐ {tool.rating.toFixed(1)}</span>
+                ) : (
+                  <span class="comparison-table__na">—</span>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </section>
+)}
+
+<style>
+  .comparison-table-section {
+    margin: 2em 0;
+  }
+
+  .comparison-table__title {
+    font-size: 1.2em;
+    margin: 0 0 1em;
+  }
+
+  .comparison-table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--ids__radius, 0.5em);
+    background: rgb(var(--ids__surface-RGB));
+  }
+
+  .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    padding: 0.75em 1em;
+    text-align: left;
+    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  .comparison-table th {
+    font-weight: 600;
+    font-size: 0.85em;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    opacity: 0.7;
+    white-space: nowrap;
+  }
+
+  .comparison-table__row:hover {
+    background: rgba(var(--ids__text-RGB), 0.03);
+  }
+
+  .comparison-table__row:last-child td {
+    border-bottom: none;
+  }
+
+  .comparison-table__link {
+    color: inherit;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .comparison-table__link:hover {
+    text-decoration: underline;
+    color: rgb(var(--ids__link-RGB));
+  }
+
+  .comparison-table__price {
+    display: inline-block;
+    padding: 0.2em 0.5em;
+    font-size: 0.85em;
+    border-radius: 0.3em;
+  }
+
+  .comparison-table__price--free {
+    background: rgba(0, 150, 0, 0.15);
+    color: rgb(0, 120, 0);
+  }
+
+  .comparison-table__price--freemium {
+    background: rgba(0, 100, 200, 0.15);
+    color: rgb(0, 80, 160);
+  }
+
+  .comparison-table__price--paid {
+    background: rgba(200, 100, 0, 0.15);
+    color: rgb(160, 80, 0);
+  }
+
+  .comparison-table__icon-cell {
+    text-align: center;
+  }
+
+  .comparison-table__yes,
+  .comparison-table__no,
+  .comparison-table__warning {
+    font-size: 1.1em;
+  }
+
+  .comparison-table__rating {
+    white-space: nowrap;
+  }
+
+  .comparison-table__na {
+    opacity: 0.4;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .comparison-table__price--free {
+      color: rgb(100, 200, 100);
+    }
+
+    .comparison-table__price--freemium {
+      color: rgb(100, 180, 255);
+    }
+
+    .comparison-table__price--paid {
+      color: rgb(255, 180, 100);
+    }
+  }
+
+  @media (max-width: 767px) {
+    .comparison-table th,
+    .comparison-table td {
+      padding: 0.5em 0.75em;
+    }
+
+    .comparison-table {
+      font-size: 0.85em;
+    }
+  }
+</style>

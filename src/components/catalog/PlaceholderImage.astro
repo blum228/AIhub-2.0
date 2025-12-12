@@ -1,0 +1,78 @@
+---
+interface Props {
+  title: string;
+  category?: string;
+  width?: number;
+  height?: number;
+}
+
+const { title, category, width = 400, height = 250 } = Astro.props;
+
+// Get category icon
+const categoryIcons: Record<string, string> = {
+  'chatbot': '💬',
+  'image-gen': '🎨',
+  'telegram-bot': '🤖',
+  'video': '🎬',
+  'default': '✨'
+};
+
+const icon = category ? (categoryIcons[category] || categoryIcons.default) : categoryIcons.default;
+
+// Truncate title if too long
+const displayTitle = title.length > 30 ? title.slice(0, 27) + '...' : title;
+---
+
+<svg 
+  class="placeholder-image"
+  width={width} 
+  height={height} 
+  viewBox={`0 0 ${width} ${height}`}
+  xmlns="http://www.w3.org/2000/svg"
+  role="img"
+  aria-label={`Placeholder для ${title}`}
+>
+  <!-- Background -->
+  <rect width="100%" height="100%" fill="rgb(var(--ids__surface-RGB, 40, 40, 45))" />
+  
+  <!-- Pattern overlay -->
+  <defs>
+    <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grid)" />
+  
+  <!-- Icon -->
+  <text 
+    x="50%" 
+    y="40%" 
+    text-anchor="middle" 
+    dominant-baseline="middle"
+    font-size="48"
+  >
+    {icon}
+  </text>
+  
+  <!-- Title -->
+  <text 
+    x="50%" 
+    y="65%" 
+    text-anchor="middle" 
+    dominant-baseline="middle"
+    fill="rgb(var(--ids__text-RGB, 230, 230, 235))"
+    font-size="16"
+    font-weight="500"
+    font-family="system-ui, sans-serif"
+  >
+    {displayTitle}
+  </text>
+</svg>
+
+<style>
+  .placeholder-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

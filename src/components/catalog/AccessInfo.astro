@@ -1,0 +1,132 @@
+---
+interface Props {
+  requiresVpn: boolean;
+  acceptsRussianCards: boolean;
+  paymentMethods?: string[];
+  supportsRussian?: boolean;
+}
+
+const { requiresVpn, acceptsRussianCards, paymentMethods = [], supportsRussian = false } = Astro.props;
+
+const paymentLabels: Record<string, string> = {
+  card: 'Visa/Mastercard',
+  crypto: 'Криптовалюта',
+  paypal: 'PayPal',
+  qiwi: 'Qiwi',
+  yoomoney: 'ЮMoney',
+  sbp: 'СБП'
+};
+---
+
+<section class="access-info">
+  <h3 class="access-info__title">Доступ из России</h3>
+  
+  <div class="access-info__grid">
+    <div class="access-info__item">
+      <span class="access-info__icon">
+        {requiresVpn ? '⚠️' : '✅'}
+      </span>
+      <div class="access-info__content">
+        <strong class="access-info__label">VPN</strong>
+        <p class="access-info__value">
+          {requiresVpn 
+            ? 'Требуется VPN для доступа к сервису' 
+            : 'Доступен без VPN из России'
+          }
+        </p>
+      </div>
+    </div>
+
+    <div class="access-info__item">
+      <span class="access-info__icon">
+        {acceptsRussianCards ? '✅' : '❌'}
+      </span>
+      <div class="access-info__content">
+        <strong class="access-info__label">Карты РФ</strong>
+        <p class="access-info__value">
+          {acceptsRussianCards 
+            ? 'Принимает карты российских банков' 
+            : 'Карты РФ не принимаются'
+          }
+        </p>
+      </div>
+    </div>
+
+    {paymentMethods.length > 0 && (
+      <div class="access-info__item access-info__item--wide">
+        <span class="access-info__icon">💳</span>
+        <div class="access-info__content">
+          <strong class="access-info__label">Способы оплаты</strong>
+          <p class="access-info__value">
+            {paymentMethods.map(m => paymentLabels[m] || m).join(', ')}
+          </p>
+        </div>
+      </div>
+    )}
+
+    {supportsRussian && (
+      <div class="access-info__item">
+        <span class="access-info__icon">🇷🇺</span>
+        <div class="access-info__content">
+          <strong class="access-info__label">Язык</strong>
+          <p class="access-info__value">Поддерживает русский язык</p>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .access-info {
+    margin: 2em 0;
+    padding: 1.5em;
+    background: rgba(var(--ids__surface-RGB), 0.5);
+    border-radius: var(--ids__radius, 1em);
+  }
+
+  .access-info__title {
+    font-size: 1.1em;
+    margin: 0 0 1em;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+
+  .access-info__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1em;
+  }
+
+  .access-info__item {
+    display: flex;
+    gap: 0.75em;
+    align-items: flex-start;
+  }
+
+  .access-info__item--wide {
+    grid-column: 1 / -1;
+  }
+
+  .access-info__icon {
+    font-size: 1.5em;
+    flex-shrink: 0;
+  }
+
+  .access-info__content {
+    flex: 1;
+  }
+
+  .access-info__label {
+    display: block;
+    font-size: 0.85em;
+    margin-bottom: 0.2em;
+  }
+
+  .access-info__value {
+    margin: 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+    line-height: 1.4;
+  }
+</style>

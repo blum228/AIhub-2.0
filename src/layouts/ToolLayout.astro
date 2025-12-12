@@ -9,13 +9,13 @@ interface Props {
 const { tool } = Astro.props;
 const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
 
-// Schema.org JSON-LD
+// Schema.org JSON-LD - Product
 const schemaOrg = {
   '@context': 'https://schema.org',
   '@type': 'Product',
   name: tool.title,
   description: tool.shortDescription,
-  image: new URL(tool.coverImage, siteUrl).toString(),
+  image: new URL(tool.coverImage || '/images/placeholder.svg', siteUrl).toString(),
   url: new URL(`/tool/${tool.slug}`, siteUrl).toString(),
   ...(tool.rating !== undefined && {
     aggregateRating: {
@@ -33,6 +33,20 @@ const schemaOrg = {
     availability: 'https://schema.org/InStock'
   }
 };
+
+// Schema.org JSON-LD - FAQPage (if FAQ exists)
+const faqSchema = tool.faq && tool.faq.length > 0 ? {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: tool.faq.map(item => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.answer
+    }
+  }))
+} : null;
 ---
 
 <CatalogLayout
@@ -43,6 +57,9 @@ const schemaOrg = {
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify(schemaOrg)} />
+    {faqSchema && (
+      <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+    )}
   </Fragment>
 
   <slot />

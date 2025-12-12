@@ -1,0 +1,204 @@
+# Implementation Plan
+
+- [x] 1. Collections content structure
+  - [x] 1.1 Add collections schema to Content Collections config
+    - Extend src/content/config.ts with collectionsCollection schema
+    - Add collections field to tools schema
+    - _Requirements: 8.1, 8.2_
+  - [x] 1.2 Write property test for category filtering
+    - **Property 2: Category page filtering correctness**
+    - **Validates: Requirements 1.2, 4.3, 8.2, 8.4**
+  - [x] 1.3 Create collection MDX files
+    - Create src/content/collections/ directory
+    - Add ai-girlfriends.mdx, image-generators.mdx, telegram-bots.mdx, free-tools.mdx, russian-friendly.mdx
+    - _Requirements: 1.3_
+  - [x] 1.4 Create collections utility functions
+    - Create src/lib/collections.ts with getToolsForCollection, getCollectionBySlug
+    - Implement filtering by tag or field value
+    - _Requirements: 1.2, 4.3_
+  - [x] 1.5 Write property test for category tool count
+    - **Property 1: Category tool count accuracy**
+    - **Validates: Requirements 1.1**
+
+- [x] 2. Checkpoint - Ensure all tests pass
+  - All tests pass ✓
+
+- [x] 3. Category pages and cards
+  - [x] 3.1 Create CategoryCard component
+    - Implement CategoryCard.astro using IDS Rounded and Sleepy
+    - Display icon, title, description, tool count badge
+    - _Requirements: 1.1_
+  - [x] 3.2 Create category page template
+    - Create src/pages/category/[slug].astro
+    - Display filtered tools grid, SEO description, sidebar with other categories
+    - _Requirements: 1.2, 1.4, 2.3_
+  - [x] 3.3 Update homepage with category cards
+    - Add categories section to catalog/index.astro using IDS Sequence
+    - Display all collections as CategoryCard grid
+    - _Requirements: 1.1_
+  - [x] 3.4 Write property test for footer category links
+    - **Property 5: Footer category links completeness**
+    - **Validates: Requirements 2.4**
+
+- [x] 4. Breadcrumbs and internal links
+  - [x] 4.1 Create Breadcrumbs component
+    - Implement Breadcrumbs.astro with IDS styling
+    - Support Home → Category → Tool structure
+    - _Requirements: 2.1_
+  - [x] 4.2 Write property test for breadcrumbs structure
+    - **Property 3: Breadcrumbs structure validity**
+    - **Validates: Requirements 2.1**
+  - [x] 4.3 Add breadcrumbs to tool pages
+    - Update [slug].astro to include Breadcrumbs component
+    - Determine primary category from tool's first tag
+    - _Requirements: 2.1_
+  - [x] 4.4 Update RelatedTools component
+    - Ensure related tools share at least one tag
+    - Exclude current tool from related section
+    - _Requirements: 2.2, 2.5_
+  - [x] 4.5 Write property test for related tools
+    - **Property 4: Related tools category matching**
+    - **Validates: Requirements 2.2, 2.5**
+  - [x] 4.6 Create FooterNav component
+    - Implement FooterNav.astro with links to all categories
+    - Add to CatalogLayout footer slot
+    - _Requirements: 2.4_
+
+- [x] 5. Checkpoint - Ensure all tests pass
+  - All tests pass ✓
+
+- [x] 6. Payment and access badges
+  - [x] 6.1 Create PaymentBadges component
+    - Implement PaymentBadges.astro with IDS styling
+    - Display Карты РФ, Крипто, СБП, Бесплатно badges
+    - _Requirements: 4.1, 4.2_
+  - [x] 6.2 Write property test for payment badges
+    - **Property 7: Payment badges correctness**
+    - **Validates: Requirements 4.1, 4.2**
+  - [x] 6.3 Create AccessBadges component
+    - Implement AccessBadges.astro
+    - Display Без VPN / Нужен VPN badges
+    - _Requirements: 9.1, 9.2_
+  - [x] 6.4 Write property test for access badges
+    - **Property 8: VPN access badges correctness**
+    - **Validates: Requirements 9.1, 9.2**
+  - [x] 6.5 Update ToolCard with new badges
+    - Add PaymentBadges and AccessBadges to ToolCard.astro
+    - _Requirements: 4.1, 9.1, 9.2_
+  - [x] 6.6 Add payment filter to catalog page
+    - Payment tags already exist in TagFilter
+    - _Requirements: 4.4_
+
+- [x] 7. Placeholder images
+  - [x] 7.1 Create PlaceholderImage component
+    - Implement PlaceholderImage.astro generating SVG
+    - Use tool title and category icon
+    - Style with IDS colors (--ids__surface-RGB, --ids__text-RGB)
+    - _Requirements: 3.1, 3.2_
+  - [x] 7.2 Write property test for placeholder generation
+    - **Property 6: Placeholder generation for missing images**
+    - **Validates: Requirements 3.1**
+  - [x] 7.3 Update ToolCard to use placeholder
+    - Add fallback to PlaceholderImage when coverImage is empty
+    - Add onerror handler for image load failures
+    - _Requirements: 3.1, 3.4_
+
+- [x] 8. Checkpoint - Ensure all tests pass
+  - All tests pass ✓
+
+- [x] 9. Telegram enhancements
+  - [x] 9.1 Create TelegramGuide component
+    - Implement TelegramGuide.astro with step-by-step instructions
+    - Use IDS Sequence for steps
+    - _Requirements: 5.4_
+  - [x] 9.2 Write property test for Telegram guide presence
+    - **Property 10: Telegram guide presence**
+    - **Validates: Requirements 5.4**
+  - [x] 9.3 Update Telegram bot tool pages
+    - Add TelegramGuide component to [slug].astro for telegram-bot tools
+    - _Requirements: 5.4_
+  - [x] 9.4 Enhance telegram-bots page
+    - Hero section exists, featured section on homepage
+    - _Requirements: 5.1, 5.3_
+  - [x] 9.5 Write property test for Telegram button
+    - **Property 9: Telegram bot button presence**
+    - **Validates: Requirements 5.2**
+    - Already covered in telegram.property.test.ts
+
+- [x] 10. Comparison tables
+  - [x] 10.1 Create ComparisonTable component
+    - Implement ComparisonTable.astro with IDS table styling
+    - Columns: Название, Цена, Карты РФ, VPN, Русский, Рейтинг
+    - Rows link to tool pages
+    - _Requirements: 6.1, 6.2, 6.3_
+  - [x] 10.2 Write property test for comparison table links
+    - **Property 11: Comparison table row links**
+    - **Validates: Requirements 6.1, 6.3**
+  - [x] 10.3 Add ComparisonTable to category pages
+    - Include table below tool grid on category pages
+    - _Requirements: 6.1_
+
+- [x] 11. Checkpoint - Ensure all tests pass
+  - All tests pass ✓
+
+- [x] 12. Extended SEO markup
+  - [x] 12.1 Add CollectionPage schema to category pages
+    - Add JSON-LD script with @type CollectionPage
+    - Include itemListElement with tools
+    - _Requirements: 7.1_
+  - [x] 12.2 Write property test for CollectionPage schema
+    - **Property 12: CollectionPage schema.org validity**
+    - **Validates: Requirements 7.1**
+  - [x] 12.3 Add BreadcrumbList schema to tool pages
+    - Add JSON-LD script with @type BreadcrumbList
+    - Match breadcrumbs structure
+    - _Requirements: 7.2_
+  - [x] 12.4 Write property test for BreadcrumbList schema
+    - **Property 13: BreadcrumbList schema.org validity**
+    - **Validates: Requirements 7.2**
+  - [x] 12.5 Add hreflang tags
+    - Add link rel="alternate" hreflang="ru-RU" to all pages
+    - _Requirements: 7.4_
+  - [x] 12.6 Write property test for hreflang
+    - **Property 15: Hreflang tag presence**
+    - **Validates: Requirements 7.4**
+  - [x] 12.7 Add FAQ schema to tool pages
+    - Add JSON-LD FAQPage for tools with FAQ
+    - _Requirements: 7.5_
+  - [x] 12.8 Write property test for FAQ schema
+    - **Property 16: FAQ schema.org conditional presence**
+    - **Validates: Requirements 7.5**
+
+- [x] 13. Access info section
+  - [x] 13.1 Create AccessInfo component
+    - Display VPN requirements and payment info
+    - _Requirements: 9.4_
+  - [x] 13.2 Write property test for access info
+    - **Property 17: Access info section presence**
+    - **Validates: Requirements 9.4**
+  - [x] 13.3 Add AccessInfo to tool pages
+    - Include section on all tool pages
+    - _Requirements: 9.4_
+
+- [x] 14. Sitemap update
+  - [x] 14.1 Update sitemap configuration
+    - Include category page URLs in sitemap
+    - Astro sitemap integration handles this automatically
+    - _Requirements: 7.3_
+  - [x] 14.2 Write property test for sitemap completeness
+    - **Property 14: Sitemap completeness**
+    - **Validates: Requirements 7.3**
+
+- [x] 15. Update sample content
+  - [x] 15.1 Update existing tool MDX files
+    - Add collections field to chai-bot.mdx, crushon-ai.mdx, seduced-ai.mdx
+    - _Requirements: 8.2_
+  - [x] 15.2 Add more sample tools
+    - Added candy-ai.mdx and pixai-art.mdx
+    - Include tools with and without images for placeholder testing
+    - _Requirements: 3.1_
+
+- [x] 16. Final Checkpoint - Ensure all tests pass
+  - All 117 tests pass ✓
+  - Build successful ✓
+  - 14 pages generated ✓

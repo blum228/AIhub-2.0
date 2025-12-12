@@ -1,8 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import Wrapper from '../components/Wrapper.astro';
 import Space from '../components/Space.astro';
 import SafeModeToggle from '../components/catalog/SafeModeToggle.astro';
+import FooterNav from '../components/catalog/FooterNav.astro';
+import { sortCollectionsByOrder, type CollectionData } from '../lib/collections';
 
 interface Props {
   title: string;
@@ -12,6 +15,15 @@ interface Props {
 }
 
 const { title, description, ogImage, canonicalUrl } = Astro.props;
+
+// Get collections for footer
+const collectionsEntries = await getCollection('collections');
+const collections: CollectionData[] = sortCollectionsByOrder(
+  collectionsEntries.map(entry => ({
+    slug: entry.slug,
+    ...entry.data
+  }))
+);
 const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
 const fullCanonicalUrl = canonicalUrl || new URL(Astro.url.pathname, siteUrl).toString();
 const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}/images/og-default.jpg`;
@@ -35,6 +47,10 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description || 'Каталог AI-сервисов для ролеплея и генерации контента'} />
     <meta name="twitter:image" content={fullOgImage} />
+
+    <!-- Hreflang -->
+    <link rel="alternate" hreflang="ru-RU" href={fullCanonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={fullCanonicalUrl} />
 
     <!-- Pagefind -->
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
@@ -64,7 +80,7 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
 
   <footer slot="footer" class="catalog-footer">
     <Wrapper>
-      <p>© 2025 AI Catalog CIS. Все права защищены.</p>
+      <FooterNav collections={collections} />
       <p class="catalog-footer__disclaimer">
         Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
       </p>
@@ -74,14 +90,14 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
 
 <style>
   .catalog-header {
-    padding: 1em 0;
+    padding: calc(var(--ids__density) * 0.5em) 0;
     border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
   }
 
   .catalog-header__inner {
     display: flex;
     align-items: center;
-    gap: 2em;
+    gap: calc(var(--ids__density) * 1em);
   }
 
   .catalog-header__logo {
@@ -89,9 +105,13 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
     align-items: center;
     gap: 0.4em;
     text-decoration: none;
-    color: inherit;
+    color: rgb(var(--ids__text-RGB));
     font-weight: 600;
     font-size: 1.2em;
+  }
+
+  .catalog-header__logo:hover {
+    color: rgb(var(--ids__hover-RGB));
   }
 
   .catalog-header__logo-icon {
@@ -100,37 +120,37 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
 
   .catalog-header__nav {
     display: flex;
-    gap: 1.5em;
+    gap: calc(var(--ids__density) * 0.8em);
     flex: 1;
   }
 
   .catalog-header__nav a {
+    color: rgb(var(--ids__link-RGB));
     text-decoration: none;
-    opacity: 0.8;
-    transition: opacity 0.2s;
+    transition: color 0.2s;
   }
 
   .catalog-header__nav a:hover {
-    opacity: 1;
+    color: rgb(var(--ids__hover-RGB));
   }
 
   .catalog-footer {
-    padding: 2em 0;
+    padding: calc(var(--ids__density) * 1em) 0;
     border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
     text-align: center;
     font-size: 0.9em;
-    opacity: 0.7;
   }
 
   .catalog-footer__disclaimer {
     font-size: 0.85em;
-    margin-top: 0.5em;
+    margin-top: calc(var(--ids__density) * 0.3em);
+    opacity: 0.7;
   }
 
   @media (max-width: 767px) {
     .catalog-header__inner {
       flex-wrap: wrap;
-      gap: 1em;
+      gap: calc(var(--ids__density) * 0.5em);
     }
 
     .catalog-header__nav {

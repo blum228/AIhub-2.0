@@ -1,0 +1,113 @@
+---
+interface Props {
+  acceptsRussianCards: boolean;
+  paymentMethods?: string[];
+  priceModel: 'free' | 'freemium' | 'paid';
+  compact?: boolean;
+}
+
+const { acceptsRussianCards, paymentMethods = [], priceModel, compact = false } = Astro.props;
+
+const hasCrypto = paymentMethods.includes('crypto');
+const hasSbp = paymentMethods.includes('sbp');
+const isFree = priceModel === 'free';
+---
+
+<div class:list={['payment-badges', { 'payment-badges--compact': compact }]}>
+  {isFree && (
+    <span class="payment-badge payment-badge--free" title="Бесплатно">
+      <span class="payment-badge__icon">🆓</span>
+      {!compact && <span class="payment-badge__label">Бесплатно</span>}
+    </span>
+  )}
+  
+  {acceptsRussianCards && (
+    <span class="payment-badge payment-badge--russian-cards" title="Принимает карты РФ">
+      <span class="payment-badge__icon">💳</span>
+      {!compact && <span class="payment-badge__label">Карты РФ</span>}
+    </span>
+  )}
+  
+  {hasCrypto && (
+    <span class="payment-badge payment-badge--crypto" title="Криптовалюта">
+      <span class="payment-badge__icon">🪙</span>
+      {!compact && <span class="payment-badge__label">Крипто</span>}
+    </span>
+  )}
+  
+  {hasSbp && (
+    <span class="payment-badge payment-badge--sbp" title="СБП">
+      <span class="payment-badge__icon">⚡</span>
+      {!compact && <span class="payment-badge__label">СБП</span>}
+    </span>
+  )}
+</div>
+
+<style>
+  .payment-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+  }
+
+  .payment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.2em 0.5em;
+    font-size: 0.75em;
+    border-radius: 0.3em;
+    background: rgba(var(--ids__surface-RGB), 0.8);
+  }
+
+  .payment-badges--compact .payment-badge {
+    padding: 0.15em 0.35em;
+    font-size: 0.7em;
+  }
+
+  .payment-badge__icon {
+    font-size: 1.1em;
+  }
+
+  .payment-badge__label {
+    font-weight: 500;
+  }
+
+  .payment-badge--free {
+    background: rgba(0, 180, 0, 0.15);
+    color: rgb(0, 140, 0);
+  }
+
+  .payment-badge--russian-cards {
+    background: rgba(0, 150, 0, 0.15);
+    color: rgb(0, 120, 0);
+  }
+
+  .payment-badge--crypto {
+    background: rgba(255, 180, 0, 0.15);
+    color: rgb(180, 120, 0);
+  }
+
+  .payment-badge--sbp {
+    background: rgba(0, 100, 200, 0.15);
+    color: rgb(0, 80, 160);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .payment-badge--free {
+      color: rgb(100, 220, 100);
+    }
+
+    .payment-badge--russian-cards {
+      color: rgb(100, 200, 100);
+    }
+
+    .payment-badge--crypto {
+      color: rgb(255, 200, 100);
+    }
+
+    .payment-badge--sbp {
+      color: rgb(100, 180, 255);
+    }
+  }
+</style>

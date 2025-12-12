@@ -1,0 +1,112 @@
+---
+import type { CollectionData } from '../../lib/collections';
+
+interface Props {
+  collections: CollectionData[];
+}
+
+const { collections } = Astro.props;
+---
+
+<footer class="footer-nav">
+  <div class="footer-nav__inner">
+    <div class="footer-nav__section">
+      <h4 class="footer-nav__title">Категории</h4>
+      <ul class="footer-nav__list">
+        {collections.map(col => (
+          <li>
+            <a href={`/category/${col.slug}`} class="footer-nav__link">
+              <span class="footer-nav__icon">{col.icon}</span>
+              {col.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="footer-nav__section">
+      <h4 class="footer-nav__title">Навигация</h4>
+      <ul class="footer-nav__list">
+        <li><a href="/catalog" class="footer-nav__link">Каталог</a></li>
+        <li><a href="/telegram-bots" class="footer-nav__link">Telegram боты</a></li>
+      </ul>
+    </div>
+
+    <div class="footer-nav__section footer-nav__section--info">
+      <h4 class="footer-nav__title">AI Каталог СНГ</h4>
+      <p class="footer-nav__text">
+        Лучшие AI-сервисы с фильтрами по оплате картами РФ, поддержке русского языка и доступности без VPN.
+      </p>
+    </div>
+  </div>
+
+  <div class="footer-nav__bottom">
+    <p>© {new Date().getFullYear()} AI Каталог СНГ</p>
+  </div>
+</footer>
+
+<style>
+  .footer-nav__inner {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: calc(var(--ids__density) * 1.2em);
+    margin-bottom: calc(var(--ids__density) * 1em);
+  }
+
+  .footer-nav__section--info {
+    max-width: 300px;
+  }
+
+  .footer-nav__title {
+    font-size: 0.9em;
+    font-weight: 600;
+    margin: 0 0 calc(var(--ids__density) * 0.5em);
+    opacity: 0.7;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .footer-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-nav__list li {
+    margin-bottom: 0.5em;
+  }
+
+  .footer-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: rgb(var(--ids__link-RGB));
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-nav__link:hover {
+    color: rgb(var(--ids__hover-RGB));
+  }
+
+  .footer-nav__icon {
+    font-size: 1.1em;
+  }
+
+  .footer-nav__text {
+    font-size: 0.9em;
+    opacity: 0.7;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .footer-nav__bottom {
+    text-align: center;
+    font-size: 0.85em;
+    opacity: 0.5;
+  }
+
+  .footer-nav__bottom p {
+    margin: 0;
+  }
+</style>

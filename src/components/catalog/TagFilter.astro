@@ -41,12 +41,11 @@ const categoryLabels: Record<Tag['category'], string> = {
   .tag-filter {
     display: flex;
     flex-wrap: wrap;
-    gap: 1em;
+    gap: calc(var(--ids__density) * 0.6em);
     align-items: flex-start;
-    padding: 1em;
+    padding: calc(var(--ids__density) * 0.6em);
     background: rgb(var(--ids__surface-RGB));
     border-radius: var(--ids__radius);
-    margin-bottom: 1.5em;
   }
 
   .tag-filter__category {

@@ -1,0 +1,90 @@
+---
+interface Props {
+  requiresVpn: boolean;
+  supportsRussian?: boolean;
+  compact?: boolean;
+}
+
+const { requiresVpn, supportsRussian = false, compact = false } = Astro.props;
+---
+
+<div class:list={['access-badges', { 'access-badges--compact': compact }]}>
+  {!requiresVpn ? (
+    <span class="access-badge access-badge--no-vpn" title="Доступно без VPN">
+      <span class="access-badge__icon">✅</span>
+      {!compact && <span class="access-badge__label">Без VPN</span>}
+    </span>
+  ) : (
+    <span class="access-badge access-badge--vpn-required" title="Требуется VPN">
+      <span class="access-badge__icon">⚠️</span>
+      {!compact && <span class="access-badge__label">Нужен VPN</span>}
+    </span>
+  )}
+  
+  {supportsRussian && (
+    <span class="access-badge access-badge--russian" title="Поддержка русского языка">
+      <span class="access-badge__icon">🇷🇺</span>
+      {!compact && <span class="access-badge__label">Русский</span>}
+    </span>
+  )}
+</div>
+
+<style>
+  .access-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4em;
+  }
+
+  .access-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0.2em 0.5em;
+    font-size: 0.75em;
+    border-radius: 0.3em;
+    background: rgba(var(--ids__surface-RGB), 0.8);
+  }
+
+  .access-badges--compact .access-badge {
+    padding: 0.15em 0.35em;
+    font-size: 0.7em;
+  }
+
+  .access-badge__icon {
+    font-size: 1.1em;
+  }
+
+  .access-badge__label {
+    font-weight: 500;
+  }
+
+  .access-badge--no-vpn {
+    background: rgba(0, 180, 0, 0.15);
+    color: rgb(0, 140, 0);
+  }
+
+  .access-badge--vpn-required {
+    background: rgba(255, 180, 0, 0.15);
+    color: rgb(180, 120, 0);
+  }
+
+  .access-badge--russian {
+    background: rgba(0, 100, 200, 0.15);
+    color: rgb(0, 80, 160);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .access-badge--no-vpn {
+      color: rgb(100, 220, 100);
+    }
+
+    .access-badge--vpn-required {
+      color: rgb(255, 200, 100);
+    }
+
+    .access-badge--russian {
+      color: rgb(100, 180, 255);
+    }
+  }
+</style>

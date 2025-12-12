@@ -11,10 +11,6 @@ const { placeholder = 'Поиск AI-сервисов...' } = Astro.props;
 </div>
 
 <style is:global>
-  .search-widget {
-    margin-bottom: 1.5em;
-  }
-
   /* Pagefind UI стилизация под IDS */
   .pagefind-ui {
     --pagefind-ui-scale: 1;
@@ -24,8 +20,8 @@ const { placeholder = 'Поиск AI-сервисов...' } = Astro.props;
     --pagefind-ui-border: rgba(var(--ids__text-RGB), 0.2);
     --pagefind-ui-tag: rgb(var(--ids__surface-RGB));
     --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: 0.5em;
-    --pagefind-ui-image-border-radius: 0.5em;
+    --pagefind-ui-border-radius: var(--ids__radius);
+    --pagefind-ui-image-border-radius: var(--ids__radius);
     --pagefind-ui-image-box-ratio: 16 / 10;
     --pagefind-ui-font: inherit;
   }
@@ -33,7 +29,7 @@ const { placeholder = 'Поиск AI-сервисов...' } = Astro.props;
   .pagefind-ui__search-input {
     font-family: inherit;
     font-size: 1em;
-    padding: 0.75em 1em;
+    padding: calc(var(--ids__density) * 0.5em) calc(var(--ids__density) * 0.6em);
     border-radius: var(--ids__radius);
   }
 

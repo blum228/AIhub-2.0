@@ -22,11 +22,31 @@ const toolsCollection = defineCollection({
       answer: z.string()
     })).optional(),
     publishedAt: z.coerce.date(),
-    updatedAt: z.coerce.date().optional()
+    updatedAt: z.coerce.date().optional(),
+    // v2: Explicit collection membership
+    collections: z.array(z.string()).optional()
   })
 });
 
-export const collections = { tools: toolsCollection };
+const collectionsCollection = defineCollection({
+  type: 'content',
+  schema: z.object({
+    title: z.string().min(1).max(100),
+    description: z.string().min(10).max(300),
+    seoDescription: z.string().min(50).max(160),
+    icon: z.string(),
+    filterTag: z.string().optional(),
+    filterField: z.enum(['acceptsRussianCards', 'requiresVpn', 'priceModel']).optional(),
+    filterValue: z.any().optional(),
+    order: z.number().default(0)
+  })
+});
 
-// Export schema for testing
+export const collections = { 
+  tools: toolsCollection,
+  collections: collectionsCollection
+};
+
+// Export schemas for testing
 export const toolSchema = toolsCollection.schema;
+export const collectionSchema = collectionsCollection.schema;
