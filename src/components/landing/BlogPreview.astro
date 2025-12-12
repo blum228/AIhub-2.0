@@ -1,0 +1,63 @@
+---
+/**
+ * Секция превью блога для landing page
+ * Отображает до 3 последних постов
+ * Requirements: 1.5
+ */
+import Wrapper from '../Wrapper.astro';
+import Space from '../Space.astro';
+import Sequence from '../Sequence.astro';
+import SequenceItem from '../SequenceItem.astro';
+import BlogCard from '../blog/BlogCard.astro';
+import { getRecentBlogPosts } from '../../lib/blog';
+
+interface Props {
+  title?: string;
+  count?: number;
+}
+
+const { title = 'Из блога', count = 3 } = Astro.props;
+
+const posts = await getRecentBlogPosts(count);
+---
+
+{posts.length > 0 && (
+  <section class="blog-preview">
+    <Wrapper>
+      <h2 class="blog-preview__title">{title}</h2>
+      <Space size="M" />
+      <Sequence size="L" gap="M">
+        {posts.map(post => (
+          <SequenceItem>
+            <BlogCard post={post} />
+          </SequenceItem>
+        ))}
+      </Sequence>
+      <Space size="S" />
+      <div class="blog-preview__more">
+        <a href="/blog" class="blog-preview__link">Все статьи →</a>
+      </div>
+    </Wrapper>
+  </section>
+)}
+
+<style>
+  .blog-preview__title {
+    text-align: center;
+  }
+
+  .blog-preview__more {
+    text-align: center;
+  }
+
+  .blog-preview__link {
+    color: rgb(var(--ids__link-RGB));
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .blog-preview__link:hover {
+    color: rgb(var(--ids__hover-RGB));
+  }
+</style>

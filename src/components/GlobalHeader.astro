@@ -1,0 +1,261 @@
+---
+/**
+ * Глобальный хедер сайта
+ * Отображается на всех страницах с навигацией и SafeModeToggle
+ * Requirements: 2.1, 2.2, 2.3
+ */
+import Wrapper from './Wrapper.astro';
+import SafeModeToggle from './catalog/SafeModeToggle.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+const currentPath = Astro.url.pathname;
+
+const navLinks = [
+  { href: '/', label: 'Главная' },
+  { href: '/catalog', label: 'Каталог' },
+  { href: '/blog', label: 'Блог' },
+  { href: '/about', label: 'О нас' }
+];
+---
+
+<header class:list={['global-header', className]}>
+  <Wrapper>
+    <div class="global-header__inner">
+      <a href="/" class="global-header__logo">
+        <span class="global-header__logo-text">AI Catalog</span>
+      </a>
+      
+      <nav class="global-header__nav" aria-label="Основная навигация">
+        {navLinks.map(link => (
+          <a 
+            href={link.href} 
+            class:list={['global-header__link', { active: currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]}
+          >
+            {link.label}
+          </a>
+        ))}
+      </nav>
+
+      <div class="global-header__actions">
+        <SafeModeToggle />
+        <button 
+          type="button" 
+          class="global-header__burger" 
+          id="mobile-menu-toggle"
+          aria-label="Открыть меню"
+          aria-expanded="false"
+          aria-controls="mobile-nav"
+        >
+          <span class="global-header__burger-line"></span>
+          <span class="global-header__burger-line"></span>
+          <span class="global-header__burger-line"></span>
+        </button>
+      </div>
+    </div>
+  </Wrapper>
+</header>
+
+<!-- Mobile Navigation Overlay -->
+<div class="mobile-nav" id="mobile-nav" aria-hidden="true">
+  <div class="mobile-nav__content">
+    <button 
+      type="button" 
+      class="mobile-nav__close" 
+      id="mobile-nav-close"
+      aria-label="Закрыть меню"
+    >
+      ✕
+    </button>
+    <nav class="mobile-nav__links" aria-label="Мобильная навигация">
+      {navLinks.map(link => (
+        <a 
+          href={link.href} 
+          class:list={['mobile-nav__link', { active: currentPath === link.href || (link.href !== '/' && currentPath.startsWith(link.href)) }]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</div>
+
+<style>
+  .global-header {
+    padding: calc(var(--ids__density) * 0.5em) 0;
+    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
+    position: sticky;
+    top: 0;
+    background: rgb(var(--ids__surface-RGB));
+    z-index: 100;
+  }
+
+  .global-header__inner {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--ids__density) * 1em);
+  }
+
+  .global-header__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(var(--ids__text-RGB));
+    font-weight: 700;
+    font-size: 1.3em;
+    letter-spacing: -0.02em;
+  }
+
+  .global-header__logo:hover {
+    color: rgb(var(--ids__link-RGB));
+  }
+
+  .global-header__nav {
+    display: flex;
+    gap: calc(var(--ids__density) * 0.8em);
+    flex: 1;
+  }
+
+  .global-header__link {
+    color: rgb(var(--ids__link-RGB));
+    text-decoration: none;
+    transition: color 0.2s;
+    padding: 0.3em 0;
+  }
+
+  .global-header__link:hover {
+    color: rgb(var(--ids__hover-RGB));
+  }
+
+  .global-header__link.active {
+    color: rgb(var(--ids__text-RGB));
+    font-weight: 600;
+  }
+
+  .global-header__actions {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--ids__density) * 0.5em);
+  }
+
+  .global-header__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+    width: 32px;
+    height: 32px;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .global-header__burger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: rgb(var(--ids__text-RGB));
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  /* Mobile Navigation Overlay */
+  .mobile-nav {
+    position: fixed;
+    inset: 0;
+    background: rgb(var(--ids__surface-RGB));
+    z-index: 200;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+
+  .mobile-nav[aria-hidden="false"] {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-nav__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: calc(var(--ids__density) * 2em);
+  }
+
+  .mobile-nav__close {
+    position: absolute;
+    top: calc(var(--ids__density) * 1em);
+    right: calc(var(--ids__density) * 1em);
+    width: 44px;
+    height: 44px;
+    font-size: 1.5em;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: rgb(var(--ids__text-RGB));
+  }
+
+  .mobile-nav__links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: calc(var(--ids__density) * 1em);
+  }
+
+  .mobile-nav__link {
+    font-size: 1.5em;
+    color: rgb(var(--ids__link-RGB));
+    text-decoration: none;
+    padding: 0.5em 1em;
+  }
+
+  .mobile-nav__link:hover,
+  .mobile-nav__link.active {
+    color: rgb(var(--ids__text-RGB));
+  }
+
+  @media (max-width: 767px) {
+    .global-header__nav {
+      display: none;
+    }
+
+    .global-header__burger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const menuToggle = document.getElementById('mobile-menu-toggle');
+  const mobileNav = document.getElementById('mobile-nav');
+  const closeBtn = document.getElementById('mobile-nav-close');
+  const mobileLinks = mobileNav?.querySelectorAll('.mobile-nav__link');
+
+  function openMenu() {
+    mobileNav?.setAttribute('aria-hidden', 'false');
+    menuToggle?.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMenu() {
+    mobileNav?.setAttribute('aria-hidden', 'true');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  menuToggle?.addEventListener('click', openMenu);
+  closeBtn?.addEventListener('click', closeMenu);
+  mobileLinks?.forEach(link => link.addEventListener('click', closeMenu));
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileNav?.getAttribute('aria-hidden') === 'false') {
+      closeMenu();
+    }
+  });
+</script>

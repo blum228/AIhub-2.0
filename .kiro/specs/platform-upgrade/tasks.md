@@ -1,0 +1,146 @@
+# Implementation Plan
+
+- [x] 1. Set up blog content collection
+  - [x] 1.1 Add blog collection schema to src/content/config.ts
+    - Define BlogPostData schema with required fields: title, description, publishedAt, author
+    - Add optional fields: coverImage, tags, relatedTools
+    - _Requirements: 6.2, 6.3_
+  - [x] 1.2 Write property test for blog schema validation
+    - **Property 11: Blog schema validation**
+    - **Validates: Requirements 6.2, 6.3, 6.4**
+  - [x] 1.3 Create src/content/blog directory with sample post
+    - Create sample MDX file with all required fields
+    - _Requirements: 6.1_
+
+- [x] 2. Create blog utility functions
+  - [x] 2.1 Create src/lib/blog.ts with helper functions
+    - Implement `sortBlogPostsByDate()` function
+    - Implement `calculateReadingTime()` function
+    - Implement `getBlogPostBySlug()` function
+    - _Requirements: 4.2, 5.2_
+  - [x] 2.2 Write property test for blog sorting
+    - **Property 5: Blog posts sorted by date**
+    - **Validates: Requirements 4.2**
+
+- [x] 3. Create GlobalHeader component
+  - [x] 3.1 Create src/components/GlobalHeader.astro
+    - Display logo linking to home
+    - Include navigation links: Home, Catalog, Blog, About
+    - Include SafeModeToggle
+    - _Requirements: 2.1, 2.2_
+  - [x] 3.2 Create src/components/MobileNav.astro
+    - Full-screen overlay for mobile navigation
+    - Close on link click or close button
+    - _Requirements: 2.4, 2.5_
+  - [x] 3.3 Add responsive styles and hamburger menu logic
+    - Show hamburger icon on viewport < 768px
+    - Toggle MobileNav overlay on click
+    - _Requirements: 2.3_
+
+- [x] 4. Create GlobalFooter component
+  - [x] 4.1 Create src/components/GlobalFooter.astro
+    - Navigation links grouped by section
+    - Category links to all collections
+    - Copyright notice with current year
+    - IDS styling with surface background
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5_
+  - [x] 4.2 Write property test for footer collections
+    - **Property 4: Footer contains all collections**
+    - **Validates: Requirements 3.3**
+
+- [x] 5. Update layouts to use global navigation
+  - [x] 5.1 Update CatalogLayout.astro
+    - Replace inline header with GlobalHeader
+    - Replace FooterNav with GlobalFooter
+    - _Requirements: 2.1, 3.1_
+  - [x] 5.2 Create or update BaseLayout to include GlobalHeader and GlobalFooter
+    - Ensure consistent navigation across all pages
+    - _Requirements: 2.1, 3.1_
+
+- [x] 6. Checkpoint - Ensure all tests pass
+  - All tests passed (131 tests)
+
+- [x] 7. Create BlogCard component
+  - [x] 7.1 Create src/components/blog/BlogCard.astro
+    - Display title, excerpt, date, cover image
+    - Link to /blog/[slug]
+    - Use IDS Rounded component for styling
+    - _Requirements: 4.3, 4.4_
+  - [x] 7.2 Write property test for blog card content
+    - **Property 6: Blog card contains required fields**
+    - **Validates: Requirements 4.3**
+  - [x] 7.3 Write property test for blog card links
+    - **Property 7: Blog card links to correct URL**
+    - **Validates: Requirements 4.4**
+
+- [x] 8. Create blog pages
+  - [x] 8.1 Create src/pages/blog/index.astro
+    - Display list of published blog posts
+    - Sort by publication date descending
+    - Use Sequence component for grid layout
+    - _Requirements: 4.1, 4.2, 4.5_
+  - [x] 8.2 Create src/pages/blog/[slug].astro
+    - Display full article content
+    - Show title, date, author, reading time
+    - Render MDX content with IDS typography
+    - Use TextWidth for optimal reading width
+    - _Requirements: 5.1, 5.2, 5.3, 5.6_
+  - [x] 8.3 Write property test for article metadata
+    - **Property 8: Article metadata displayed**
+    - **Validates: Requirements 5.2**
+
+- [x] 9. Add related tools and Schema.org to blog posts
+  - [x] 9.1 Add related tools section to blog post page
+    - Display tool cards for referenced tools
+    - Skip non-existent tools gracefully
+    - _Requirements: 5.4_
+  - [x] 9.2 Write property test for related tools
+    - **Property 9: Related tools displayed**
+    - **Validates: Requirements 5.4**
+  - [x] 9.3 Add Schema.org Article structured data
+    - Include JSON-LD with @type Article
+    - Add headline, datePublished, author fields
+    - _Requirements: 5.5_
+  - [x] 9.4 Write property test for Article schema
+    - **Property 10: Article Schema.org structured data**
+    - **Validates: Requirements 5.5**
+
+- [x] 10. Checkpoint - Ensure all tests pass
+  - All tests passed (172 tests)
+
+- [x] 11. Create landing page components
+  - [x] 11.1 Create src/components/landing/HeroSection.astro
+    - Hero with headline, description, CTA button
+    - Use IDS components: Wrapper, TextWidth, Space
+    - _Requirements: 1.1, 1.6_
+  - [x] 11.2 Create src/components/landing/FeaturedTools.astro
+    - Display top 4 tools by rating
+    - Use Sequence and ToolCard components
+    - _Requirements: 1.2_
+  - [x] 11.3 Write property test for featured tools
+    - **Property 1: Featured tools are top-rated**
+    - **Validates: Requirements 1.2**
+  - [x] 11.4 Create src/components/landing/HowItWorks.astro
+    - Display 3-4 steps with icons
+    - Use Sequence component
+    - _Requirements: 1.4_
+  - [x] 11.5 Create src/components/landing/BlogPreview.astro
+    - Display up to 3 recent blog posts
+    - Use BlogCard component
+    - _Requirements: 1.5_
+  - [x] 11.6 Write property test for blog preview
+    - **Property 3: Blog preview limited to 3 posts**
+    - **Validates: Requirements 1.5**
+
+- [x] 12. Create landing page
+  - [x] 12.1 Create src/pages/index.astro (replace redirect)
+    - Compose HeroSection, FeaturedTools, CategoryCards, HowItWorks, BlogPreview
+    - Use IDS layout components
+    - _Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6_
+  - [x] 12.2 Write property test for landing collections
+    - **Property 2: All collections displayed on landing**
+    - **Validates: Requirements 1.3**
+
+- [x] 13. Final Checkpoint - Ensure all tests pass
+  - All 172 tests passed
+  - Build completed successfully (16 pages)

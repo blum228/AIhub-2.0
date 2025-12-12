@@ -1,0 +1,82 @@
+---
+/**
+ * Hero секция для landing page
+ * Requirements: 1.1, 1.6
+ */
+import Wrapper from '../Wrapper.astro';
+import TextWidth from '../TextWidth.astro';
+import Space from '../Space.astro';
+
+interface Props {
+  headline?: string;
+  description?: string;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
+const {
+  headline = 'AI Каталог для СНГ',
+  description = 'Лучшие AI-сервисы для ролеплея и генерации контента. Фильтры по оплате картами РФ, поддержке русского языка и доступности без VPN.',
+  ctaText = 'Открыть каталог',
+  ctaLink = '/catalog'
+} = Astro.props;
+---
+
+<section class="hero">
+  <Wrapper>
+    <TextWidth>
+      <Space size="XL" />
+      <h1 class="hero__headline">{headline}</h1>
+      <p class="hero__description">{description}</p>
+      <Space size="M" />
+      <a href={ctaLink} class="hero__cta">{ctaText} →</a>
+      <Space size="XL" />
+    </TextWidth>
+  </Wrapper>
+</section>
+
+<style>
+  .hero {
+    text-align: center;
+    background: linear-gradient(
+      180deg,
+      rgba(var(--ids__surface-RGB), 0.5) 0%,
+      transparent 100%
+    );
+  }
+
+  .hero__headline {
+    font-size: clamp(2em, 5vw, 3.5em);
+    font-weight: 700;
+    line-height: 1.1;
+    margin: 0 0 0.5em;
+    letter-spacing: -0.02em;
+  }
+
+  .hero__description {
+    font-size: clamp(1.1em, 2vw, 1.3em);
+    line-height: 1.5;
+    opacity: 0.8;
+    margin: 0;
+    max-width: 600px;
+    margin-inline: auto;
+  }
+
+  .hero__cta {
+    display: inline-block;
+    padding: 0.8em 2em;
+    font-size: 1.1em;
+    font-weight: 600;
+    background: rgb(var(--ids__link-RGB));
+    color: white;
+    text-decoration: none;
+    border-radius: 0.5em;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .hero__cta:hover {
+    background: rgb(var(--ids__hover-RGB));
+    color: white;
+    transform: translateY(-2px);
+  }
+</style>

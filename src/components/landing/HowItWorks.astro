@@ -1,0 +1,112 @@
+---
+/**
+ * Секция "Как это работает" для landing page
+ * Requirements: 1.4
+ */
+import Wrapper from '../Wrapper.astro';
+import Space from '../Space.astro';
+import Sequence from '../Sequence.astro';
+import SequenceItem from '../SequenceItem.astro';
+
+interface Step {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+interface Props {
+  title?: string;
+  steps?: Step[];
+}
+
+const defaultSteps: Step[] = [
+  {
+    icon: '🔍',
+    title: 'Выберите категорию',
+    description: 'Найдите нужный тип AI-сервиса: чат-боты, генераторы изображений, видео и другие.'
+  },
+  {
+    icon: '🎯',
+    title: 'Используйте фильтры',
+    description: 'Отфильтруйте по оплате картами РФ, поддержке русского языка или доступности без VPN.'
+  },
+  {
+    icon: '⭐',
+    title: 'Изучите обзоры',
+    description: 'Прочитайте описания, посмотрите рейтинги и выберите лучший вариант для себя.'
+  },
+  {
+    icon: '🚀',
+    title: 'Начните использовать',
+    description: 'Перейдите на сайт сервиса и начните работу с AI-инструментом.'
+  }
+];
+
+const { title = 'Как это работает', steps = defaultSteps } = Astro.props;
+---
+
+<section class="how-it-works">
+  <Wrapper>
+    <h2 class="how-it-works__title">{title}</h2>
+    <Space size="M" />
+    <Sequence size="L" gap="M">
+      {steps.map((step, index) => (
+        <SequenceItem>
+          <div class="how-it-works__step">
+            <span class="how-it-works__number">{index + 1}</span>
+            <span class="how-it-works__icon">{step.icon}</span>
+            <h3 class="how-it-works__step-title">{step.title}</h3>
+            <p class="how-it-works__step-description">{step.description}</p>
+          </div>
+        </SequenceItem>
+      ))}
+    </Sequence>
+  </Wrapper>
+</section>
+
+<style>
+  .how-it-works__title {
+    text-align: center;
+  }
+
+  .how-it-works__step {
+    text-align: center;
+    padding: calc(var(--ids__density) * 1em);
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: var(--ids__radius);
+    height: 100%;
+  }
+
+  .how-it-works__number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    font-size: 0.9em;
+    font-weight: 600;
+    background: rgb(var(--ids__link-RGB));
+    color: white;
+    border-radius: 50%;
+    margin-bottom: 0.5em;
+  }
+
+  .how-it-works__icon {
+    display: block;
+    font-size: 2.5em;
+    margin-bottom: 0.3em;
+  }
+
+  .how-it-works__step-title {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin: 0 0 0.5em;
+  }
+
+  .how-it-works__step-description {
+    font-size: 0.95em;
+    opacity: 0.8;
+    line-height: 1.5;
+    margin: 0;
+  }
+</style>

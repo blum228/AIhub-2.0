@@ -1,11 +1,9 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import Wrapper from '../components/Wrapper.astro';
 import Space from '../components/Space.astro';
-import SafeModeToggle from '../components/catalog/SafeModeToggle.astro';
-import FooterNav from '../components/catalog/FooterNav.astro';
-import { sortCollectionsByOrder, type CollectionData } from '../lib/collections';
+import GlobalHeader from '../components/GlobalHeader.astro';
+import GlobalFooter from '../components/GlobalFooter.astro';
 
 interface Props {
   title: string;
@@ -16,14 +14,6 @@ interface Props {
 
 const { title, description, ogImage, canonicalUrl } = Astro.props;
 
-// Get collections for footer
-const collectionsEntries = await getCollection('collections');
-const collections: CollectionData[] = sortCollectionsByOrder(
-  collectionsEntries.map(entry => ({
-    slug: entry.slug,
-    ...entry.data
-  }))
-);
 const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
 const fullCanonicalUrl = canonicalUrl || new URL(Astro.url.pathname, siteUrl).toString();
 const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}/images/og-default.jpg`;
@@ -56,20 +46,7 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
     <link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
   </Fragment>
 
-  <header slot="header" class="catalog-header">
-    <Wrapper>
-      <div class="catalog-header__inner">
-        <a href="/" class="catalog-header__logo">
-          <span class="catalog-header__logo-text">AI Catalog</span>
-        </a>
-        <nav class="catalog-header__nav">
-          <a href="/catalog">Каталог</a>
-          <a href="/telegram-bots">Telegram боты</a>
-        </nav>
-        <SafeModeToggle />
-      </div>
-    </Wrapper>
-  </header>
+  <GlobalHeader slot="header" />
 
   <Wrapper>
     <Space size="M" />
@@ -77,85 +54,5 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
     <Space size="L" />
   </Wrapper>
 
-  <footer slot="footer" class="catalog-footer">
-    <Wrapper>
-      <FooterNav collections={collections} />
-      <p class="catalog-footer__disclaimer">
-        Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
-      </p>
-    </Wrapper>
-  </footer>
+  <GlobalFooter slot="footer" />
 </BaseLayout>
-
-<style>
-  .catalog-header {
-    padding: calc(var(--ids__density) * 0.5em) 0;
-    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
-  }
-
-  .catalog-header__inner {
-    display: flex;
-    align-items: center;
-    gap: calc(var(--ids__density) * 1em);
-  }
-
-  .catalog-header__logo {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: rgb(var(--ids__text-RGB));
-    font-weight: 700;
-    font-size: 1.3em;
-    letter-spacing: -0.02em;
-  }
-
-  .catalog-header__logo:hover {
-    color: rgb(var(--ids__link-RGB));
-  }
-
-  .catalog-header__nav {
-    display: flex;
-    gap: calc(var(--ids__density) * 0.8em);
-    flex: 1;
-  }
-
-  .catalog-header__nav a {
-    color: rgb(var(--ids__link-RGB));
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .catalog-header__nav a:hover {
-    color: rgb(var(--ids__hover-RGB));
-  }
-
-  .catalog-footer {
-    padding: calc(var(--ids__density) * 1em) 0;
-    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
-    text-align: center;
-    font-size: 0.9em;
-  }
-
-  .catalog-footer__disclaimer {
-    font-size: 0.85em;
-    margin-top: calc(var(--ids__density) * 0.3em);
-    opacity: 0.7;
-  }
-
-  @media (max-width: 767px) {
-    .catalog-header__inner {
-      flex-wrap: wrap;
-      gap: calc(var(--ids__density) * 0.5em);
-    }
-
-    .catalog-header__nav {
-      order: 3;
-      width: 100%;
-      justify-content: center;
-    }
-
-    .catalog-header__logo {
-      font-size: 1.1em;
-    }
-  }
-</style>

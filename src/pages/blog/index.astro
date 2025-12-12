@@ -1,0 +1,53 @@
+---
+/**
+ * Страница списка блог-постов
+ * Requirements: 4.1, 4.2, 4.5
+ */
+import CatalogLayout from '../../layouts/CatalogLayout.astro';
+import BlogCard from '../../components/blog/BlogCard.astro';
+import Space from '../../components/Space.astro';
+import TextWidth from '../../components/TextWidth.astro';
+import Sequence from '../../components/Sequence.astro';
+import SequenceItem from '../../components/SequenceItem.astro';
+import { getAllBlogPosts } from '../../lib/blog';
+
+// Получаем все посты, отсортированные по дате
+const posts = await getAllBlogPosts();
+---
+
+<CatalogLayout
+  title="Блог"
+  description="Статьи об AI-инструментах, гайды и обзоры нейросетей для русскоязычной аудитории."
+>
+  <TextWidth>
+    <Space size="XL" />
+    <h1 class="S">Блог</h1>
+    <p class="loud">
+      Статьи об AI-инструментах, гайды по использованию и обзоры лучших нейросетей.
+    </p>
+  </TextWidth>
+
+  <Space size="L" />
+
+  {posts.length > 0 ? (
+    <Sequence size="L" gap="M">
+      {posts.map(post => (
+        <SequenceItem>
+          <BlogCard post={post} />
+        </SequenceItem>
+      ))}
+    </Sequence>
+  ) : (
+    <TextWidth>
+      <p class="blog-empty">Пока нет опубликованных статей. Скоро здесь появится интересный контент!</p>
+    </TextWidth>
+  )}
+</CatalogLayout>
+
+<style>
+  .blog-empty {
+    text-align: center;
+    opacity: 0.6;
+    padding: 2em 0;
+  }
+</style>

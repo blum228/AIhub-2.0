@@ -1,0 +1,124 @@
+---
+/**
+ * Карточка блог-поста для списка статей
+ * Requirements: 4.3, 4.4
+ */
+import Rounded from '../Rounded.astro';
+import type { BlogPost } from '../../lib/blog';
+
+interface Props {
+  post: BlogPost;
+}
+
+const { post } = Astro.props;
+const { title, description, publishedAt, coverImage, author } = post.data;
+
+// Форматирование даты
+const formattedDate = publishedAt.toLocaleDateString('ru-RU', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// Создаём excerpt из description
+const excerpt = description.length > 150 
+  ? description.slice(0, 150) + '...' 
+  : description;
+---
+
+<article class="blog-card">
+  <a href={`/blog/${post.slug}`} class="blog-card__link">
+    {coverImage && (
+      <Rounded radius="1em" class="blog-card__image-wrapper">
+        <img
+          src={coverImage}
+          alt={title}
+          class="blog-card__image"
+          loading="lazy"
+        />
+      </Rounded>
+    )}
+    
+    <div class="blog-card__content">
+      <time class="blog-card__date" datetime={publishedAt.toISOString()}>
+        {formattedDate}
+      </time>
+      <h3 class="blog-card__title">{title}</h3>
+      <p class="blog-card__excerpt">{excerpt}</p>
+      {author && <span class="blog-card__author">{author}</span>}
+    </div>
+  </a>
+</article>
+
+<style>
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .blog-card__link {
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    flex: 1;
+  }
+
+  .blog-card__image-wrapper {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background: rgb(var(--ids__surface-RGB));
+    margin-bottom: 0.75em;
+  }
+
+  .blog-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .blog-card:hover .blog-card__image {
+    transform: scale(1.05);
+  }
+
+  .blog-card__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-card__date {
+    font-size: 0.85em;
+    opacity: 0.6;
+    margin-bottom: 0.3em;
+  }
+
+  .blog-card__title {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin: 0 0 0.5em;
+    line-height: 1.3;
+    transition: color 0.2s ease;
+  }
+
+  .blog-card:hover .blog-card__title {
+    color: rgb(var(--ids__link-RGB));
+  }
+
+  .blog-card__excerpt {
+    font-size: 0.95em;
+    line-height: 1.5;
+    opacity: 0.8;
+    margin: 0 0 0.5em;
+    flex: 1;
+  }
+
+  .blog-card__author {
+    font-size: 0.85em;
+    opacity: 0.6;
+    margin-top: auto;
+  }
+</style>

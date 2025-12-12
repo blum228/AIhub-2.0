@@ -1,0 +1,249 @@
+---
+/**
+ * Страница отдельного блог-поста
+ * Requirements: 5.1, 5.2, 5.3, 5.4, 5.5, 5.6
+ */
+import { getCollection } from 'astro:content';
+import CatalogLayout from '../../layouts/CatalogLayout.astro';
+import Rounded from '../../components/Rounded.astro';
+import Space from '../../components/Space.astro';
+import TextWidth from '../../components/TextWidth.astro';
+import Breadcrumbs from '../../components/catalog/Breadcrumbs.astro';
+import ToolCard from '../../components/catalog/ToolCard.astro';
+import Sequence from '../../components/Sequence.astro';
+import SequenceItem from '../../components/SequenceItem.astro';
+import { calculateReadingTime } from '../../lib/blog';
+import type { ToolData } from '../../lib/types';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(entry => ({
+    params: { slug: entry.slug },
+    props: { entry }
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+
+const { title, description, publishedAt, author, coverImage, relatedTools, tags } = entry.data;
+
+// Время чтения (используем body контента)
+const readingTime = calculateReadingTime(entry.body);
+
+// Форматирование даты
+const formattedDate = publishedAt.toLocaleDateString('ru-RU', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// Breadcrumbs
+const breadcrumbItems = [
+  { label: 'Блог', href: '/blog' },
+  { label: title }
+];
+
+// Related tools
+let relatedToolsData: ToolData[] = [];
+if (relatedTools && relatedTools.length > 0) {
+  const allTools = await getCollection('tools');
+  relatedToolsData = relatedTools
+    .map(slug => allTools.find(t => t.slug === slug))
+    .filter((t): t is NonNullable<typeof t> => t !== undefined)
+    .map(t => ({ slug: t.slug, ...t.data }));
+}
+
+// Schema.org Article
+const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": title,
+  "description": description,
+  "datePublished": publishedAt.toISOString(),
+  "author": {
+    "@type": "Person",
+    "name": author
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "AI Каталог СНГ",
+    "url": siteUrl
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": `${siteUrl}/blog/${entry.slug}`
+  },
+  ...(coverImage && { "image": `${siteUrl}${coverImage}` })
+};
+
+// Breadcrumb Schema
+const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Главная", "item": siteUrl },
+    { "@type": "ListItem", "position": 2, "name": "Блог", "item": `${siteUrl}/blog` },
+    { "@type": "ListItem", "position": 3, "name": title }
+  ]
+};
+---
+
+<CatalogLayout
+  title={title}
+  description={description}
+  ogImage={coverImage}
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <Breadcrumbs items={breadcrumbItems} />
+  <Space size="S" />
+
+  <article class="blog-post">
+    <!-- Header -->
+    <header class="blog-post__header">
+      {coverImage && (
+        <Rounded radius="1.5em" class="blog-post__cover">
+          <img src={coverImage} alt={title} class="blog-post__image" />
+        </Rounded>
+      )}
+
+      <TextWidth>
+        <h1 class="blog-post__title">{title}</h1>
+        
+        <div class="blog-post__meta">
+          <time datetime={publishedAt.toISOString()}>{formattedDate}</time>
+          <span class="blog-post__separator">•</span>
+          <span>{author}</span>
+          <span class="blog-post__separator">•</span>
+          <span>{readingTime} мин. чтения</span>
+        </div>
+
+        {tags && tags.length > 0 && (
+          <div class="blog-post__tags">
+            {tags.map(tag => (
+              <span class="blog-post__tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </TextWidth>
+    </header>
+
+    <Space size="L" />
+
+    <!-- Content -->
+    <TextWidth>
+      <div class="blog-post__content prose">
+        <Content />
+      </div>
+    </TextWidth>
+
+    <!-- Related Tools -->
+    {relatedToolsData.length > 0 && (
+      <>
+        <Space size="L" />
+        <section class="blog-post__related">
+          <h2>Упомянутые инструменты</h2>
+          <Space size="S" />
+          <Sequence size="L" gap="M">
+            {relatedToolsData.map(tool => (
+              <SequenceItem>
+                <ToolCard
+                  slug={tool.slug}
+                  title={tool.title}
+                  shortDescription={tool.shortDescription}
+                  coverImage={tool.coverImage}
+                  gifPreview={tool.gifPreview}
+                  priceModel={tool.priceModel}
+                  tags={tool.tags}
+                  isNsfw={tool.isNsfw}
+                  affiliateLink={tool.affiliateLink}
+                />
+              </SequenceItem>
+            ))}
+          </Sequence>
+        </section>
+      </>
+    )}
+  </article>
+</CatalogLayout>
+
+<style>
+  .blog-post__header {
+    text-align: center;
+  }
+
+  .blog-post__cover {
+    max-width: 800px;
+    margin: 0 auto calc(var(--ids__density) * 1.5em);
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+  }
+
+  .blog-post__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .blog-post__title {
+    margin-bottom: calc(var(--ids__density) * 0.5em);
+  }
+
+  .blog-post__meta {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    font-size: 0.95em;
+    opacity: 0.7;
+    margin-bottom: calc(var(--ids__density) * 0.5em);
+  }
+
+  .blog-post__separator {
+    opacity: 0.5;
+  }
+
+  .blog-post__tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.4em;
+  }
+
+  .blog-post__tag {
+    font-size: 0.85em;
+    padding: 0.3em 0.7em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: 0.3em;
+  }
+
+  .blog-post__content {
+    line-height: 1.7;
+  }
+
+  .blog-post__content :global(h2) {
+    margin-top: 1.5em;
+    margin-bottom: 0.5em;
+  }
+
+  .blog-post__content :global(p) {
+    margin-bottom: 1em;
+  }
+
+  .blog-post__content :global(ul),
+  .blog-post__content :global(ol) {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+  }
+
+  .blog-post__content :global(li) {
+    margin-bottom: 0.3em;
+  }
+
+  .blog-post__related h2 {
+    text-align: center;
+  }
+</style>
