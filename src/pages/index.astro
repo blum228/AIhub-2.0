@@ -1,15 +1,15 @@
 ---
 /**
  * Landing Page — AI Девушки
- * SEO: главная страница с фокусом на AI girlfriends
  */
 import CatalogLayout from '../layouts/CatalogLayout.astro';
 import Space from '../components/Space.astro';
 import HeroSection from '../components/landing/HeroSection.astro';
 import CategoryCards from '../components/landing/CategoryCards.astro';
 import BlogPreview from '../components/landing/BlogPreview.astro';
+// import Noise from '../components/ui/Noise';
 
-// Schema.org для главной
+// Schema.org
 const siteUrl = Astro.site?.toString() || 'https://ai-catalog.ru';
 const websiteSchema = {
   "@context": "https://schema.org",
@@ -29,7 +29,9 @@ const websiteSchema = {
   title="AI Девушки — Лучшие AI-сервисы для общения | AI Каталог"
   description="Рейтинг лучших AI девушек 2024. Candy AI, CrushOn AI, Replika. Оплата картами РФ, без VPN."
 >
-  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  
+  <!-- <Noise client:load patternAlpha={25} patternRefreshInterval={4} /> -->
   
   <HeroSection 
     headline="Найди свою AI-девушку"
@@ -38,12 +40,13 @@ const websiteSchema = {
     ctaLink="/catalog"
   />
   
-  <CategoryCards title="Категории" />
+  <Space size="XL" />
+
+  <CategoryCards title="Подборки" />
   
   <Space size="XL" />
   
-  <BlogPreview title="Из блога" />
+  <BlogPreview title="Блог" />
+  
+  <Space size="XL" />
 </CatalogLayout>
-
-
-

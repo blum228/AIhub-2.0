@@ -1,75 +1,82 @@
 ---
-import Rounded from '../Rounded.astro';
-
+/**
+ * Карточка категории — крупная, выразительная
+ */
 interface Props {
   slug: string;
   title: string;
   description: string;
   icon: string;
   toolCount: number;
-  featured?: boolean;
+  index?: number;
 }
 
-const { slug, title, description, icon, toolCount, featured = false } = Astro.props;
+const { slug, title, description } = Astro.props;
 ---
 
-<a href={`/category/${slug}`} class:list={['category-card', { 'category-card--featured': featured }]}>
-  <Rounded class="category-card__inner">
-    <h3 class="category-card__title">{title}</h3>
-    <span class="category-card__count">{toolCount}</span>
-  </Rounded>
+<a href={`/category/${slug}`} class="collection-card">
+  <h3 class="collection-card__title">{title}</h3>
+  <p class="collection-card__desc">{description}</p>
+  <span class="collection-card__link">Смотреть →</span>
 </a>
 
 <style>
-  .category-card {
-    display: block;
+  .collection-card {
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
     color: inherit;
-  }
-
-  .category-card :global(.category-card__inner) {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1em;
-    padding: 1em 1.25em;
+    padding: 2em;
+    min-height: 220px;
     background: rgb(var(--ids__surface-RGB));
-    height: 100%;
-    transition: background 0.2s ease;
+    border-radius: 24px;
+    transition: 
+      background 0.3s ease,
+      transform 0.3s ease;
   }
-
-  .category-card:hover :global(.category-card__inner) {
-    background: rgba(var(--ids__surface-RGB), 0.7);
+  
+  .collection-card:hover {
+    background: rgba(var(--ids__text-RGB), 0.04);
+    transform: translateY(-4px);
   }
-
-  .category-card--featured :global(.category-card__inner) {
-    border: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  
+  .collection-card__title {
+    font-size: 1.8em;
+    font-weight: 700;
+    margin: 0 0 0.4em;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: rgb(var(--ids__text-RGB));
   }
-
-  .category-card__title {
-    font-size: 1.1em;
-    font-weight: 600;
+  
+  .collection-card__desc {
+    font-size: 1em;
+    line-height: 1.5;
     margin: 0;
-    line-height: 1.2;
-    color: rgba(var(--ids__text-RGB), 0.6);
-    transition: color 0.5s ease;
+    color: rgba(var(--ids__text-RGB), 0.55);
+    flex: 1;
   }
-
-  .category-card:hover .category-card__title {
-    color: rgb(var(--ids__text-RGB));
-    transition: color 0s ease;
+  
+  .collection-card__link {
+    font-size: 0.9em;
+    font-weight: 500;
+    color: rgba(var(--ids__text-RGB), 0.35);
+    margin-top: 1.5em;
+    transition: color 0.3s ease;
   }
-
-  .category-card__count {
-    flex-shrink: 0;
-    font-size: 0.85em;
-    font-weight: 600;
-    color: rgba(var(--ids__text-RGB), 0.6);
-    transition: color 0.5s ease;
+  
+  .collection-card:hover .collection-card__link {
+    color: rgb(var(--ids__link-RGB));
   }
-
-  .category-card:hover .category-card__count {
-    color: rgb(var(--ids__text-RGB));
-    transition: color 0s ease;
+  
+  @media (max-width: 767px) {
+    .collection-card {
+      padding: 1.5em;
+      min-height: 180px;
+    }
+    
+    .collection-card__title {
+      font-size: 1.4em;
+    }
   }
 </style>
