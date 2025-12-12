@@ -22,6 +22,7 @@ const toolsCollection = defineCollection({
     gifPreview: z.string().optional(),
     tags: z.array(z.string()).min(1),
     priceModel: z.enum(['free', 'freemium', 'paid']),
+    priceFrom: z.number().optional(),
     isNsfw: z.boolean().default(true),
     affiliateLink: z.string().url(),
     rating: z.number().min(0).max(5).optional(),
