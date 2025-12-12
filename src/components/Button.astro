@@ -1,0 +1,110 @@
+---
+/**
+ * CTA кнопка в стиле IDS
+ * Минималистичный дизайн с тонкой рамкой
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'secondary' | 'ghost';
+  size?: 'S' | 'M' | 'L';
+  class?: string;
+  type?: 'button' | 'submit' | 'reset';
+  disabled?: boolean;
+}
+
+const { 
+  href, 
+  variant = 'primary', 
+  size = 'M',
+  class: className,
+  type = 'button',
+  disabled = false
+} = Astro.props;
+
+const Tag = href ? 'a' : 'button';
+---
+
+<Tag
+  href={href}
+  type={!href ? type : undefined}
+  disabled={!href ? disabled : undefined}
+  class:list={['ids-button', `ids-button--${variant}`, `ids-button--${size}`, className]}
+>
+  <slot />
+</Tag>
+
+<style>
+  .ids-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    font-family: inherit;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: var(--ids__radius, 0.3em);
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+
+  .ids-button:hover {
+    transition: all 0s ease;
+  }
+
+  .ids-button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Sizes */
+  .ids-button--S {
+    padding: 0.35em 0.7em;
+    font-size: 0.85em;
+  }
+
+  .ids-button--M {
+    padding: 0.5em 1em;
+    font-size: 1em;
+  }
+
+  .ids-button--L {
+    padding: 0.6em 1.4em;
+    font-size: 1.1em;
+  }
+
+  /* Primary - filled */
+  .ids-button--primary {
+    background: rgb(var(--ids__text-RGB));
+    color: rgb(var(--ids__background-RGB));
+    border: 1px solid rgb(var(--ids__text-RGB));
+  }
+
+  .ids-button--primary:hover:not(:disabled) {
+    background: transparent;
+    color: rgb(var(--ids__text-RGB));
+  }
+
+  /* Secondary - outlined */
+  .ids-button--secondary {
+    background: transparent;
+    color: rgb(var(--ids__text-RGB));
+    border: 1px solid rgba(var(--ids__text-RGB), 0.5);
+  }
+
+  .ids-button--secondary:hover:not(:disabled) {
+    border-color: rgb(var(--ids__text-RGB));
+    background: rgba(var(--ids__text-RGB), 0.05);
+  }
+
+  /* Ghost - minimal */
+  .ids-button--ghost {
+    background: transparent;
+    color: rgba(var(--ids__text-RGB), 0.6);
+    border: 1px solid transparent;
+  }
+
+  .ids-button--ghost:hover:not(:disabled) {
+    color: rgb(var(--ids__text-RGB));
+    border-color: rgba(var(--ids__text-RGB), 0.2);
+  }
+</style>

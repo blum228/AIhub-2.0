@@ -88,83 +88,92 @@ const navLinks = [
     position: sticky;
     top: 0;
     z-index: 100;
-    padding: calc(var(--ids__density) * 0.5em) 0;
-    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
+    padding: calc(var(--ids__density) * 0.4em) 0;
     background: rgb(var(--ids__background-RGB));
   }
 
   .global-header__inner {
     display: flex;
     align-items: center;
-    gap: calc(var(--ids__density) * 1em);
+    justify-content: space-between;
   }
 
   .global-header__logo {
-    display: flex;
-    align-items: center;
     text-decoration: none;
     color: rgb(var(--ids__text-RGB));
-    font-weight: 700;
+    font-weight: 600;
+    font-size: 1.1em;
+    letter-spacing: -0.02em;
+    transition: color 0.5s ease;
   }
 
   .global-header__logo:hover {
     color: rgb(var(--ids__link-RGB));
+    transition: color 0s ease;
   }
 
   .global-header__nav {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: calc(var(--ids__density) * 0.8em);
-    flex: 1;
+    gap: 0.5em;
   }
 
   .global-header__link {
-    color: rgb(var(--ids__link-RGB));
+    color: rgba(var(--ids__text-RGB), 0.6);
     text-decoration: none;
-    transition: color 0.2s;
-    padding: 0.3em 0;
+    padding: 0.3em 0.6em;
+    transition: color 0.5s ease;
   }
 
   .global-header__link:hover {
-    color: rgb(var(--ids__hover-RGB));
+    color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
   }
 
   .global-header__link.active {
     color: rgb(var(--ids__text-RGB));
-    font-weight: 600;
   }
 
   .global-header__actions {
     display: flex;
     align-items: center;
-    gap: calc(var(--ids__density) * 0.5em);
+    gap: 0.5em;
   }
 
   .global-header__burger {
     display: none;
     flex-direction: column;
     justify-content: center;
-    gap: 4px;
-    width: 32px;
-    height: 32px;
-    padding: 6px;
+    gap: 5px;
+    width: 2em;
+    height: 2em;
+    padding: 0.4em;
     background: transparent;
-    border: none;
+    border: 1px solid rgba(var(--ids__text-RGB), 0.2);
+    border-radius: var(--ids__radius, 0.3em);
     cursor: pointer;
+    transition: border-color 0.5s ease;
+  }
+
+  .global-header__burger:hover {
+    border-color: rgba(var(--ids__text-RGB), 0.5);
+    transition: border-color 0s ease;
   }
 
   .global-header__burger-line {
     display: block;
     width: 100%;
-    height: 2px;
+    height: 1px;
     background: rgb(var(--ids__text-RGB));
-    transition: transform 0.2s, opacity 0.2s;
   }
 
   /* Mobile Navigation Overlay */
   .mobile-nav {
     position: fixed;
     inset: 0;
-    background: rgb(var(--ids__surface-RGB));
+    background: rgb(var(--ids__background-RGB));
     z-index: 200;
     opacity: 0;
     visibility: hidden;
@@ -182,39 +191,47 @@ const navLinks = [
     align-items: center;
     justify-content: center;
     height: 100%;
-    padding: calc(var(--ids__density) * 2em);
   }
 
   .mobile-nav__close {
     position: absolute;
-    top: calc(var(--ids__density) * 1em);
-    right: calc(var(--ids__density) * 1em);
-    width: 44px;
-    height: 44px;
-    font-size: 1.5em;
+    top: calc(var(--ids__density) * 0.6em);
+    right: calc(var(--ids__density) * 0.6em);
+    width: 2em;
+    height: 2em;
+    font-size: 1em;
     background: transparent;
-    border: none;
+    border: 1px solid rgba(var(--ids__text-RGB), 0.2);
+    border-radius: var(--ids__radius, 0.3em);
     cursor: pointer;
     color: rgb(var(--ids__text-RGB));
+    transition: border-color 0.5s ease;
+  }
+
+  .mobile-nav__close:hover {
+    border-color: rgba(var(--ids__text-RGB), 0.5);
+    transition: border-color 0s ease;
   }
 
   .mobile-nav__links {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: calc(var(--ids__density) * 1em);
+    gap: 0.5em;
   }
 
   .mobile-nav__link {
-    font-size: 1.5em;
-    color: rgb(var(--ids__link-RGB));
+    font-size: 1.2em;
+    color: rgba(var(--ids__text-RGB), 0.6);
     text-decoration: none;
     padding: 0.5em 1em;
+    transition: color 0.5s ease;
   }
 
   .mobile-nav__link:hover,
   .mobile-nav__link.active {
     color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
   }
 
   @media (max-width: 767px) {

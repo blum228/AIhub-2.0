@@ -1,12 +1,11 @@
 ---
 /**
  * Глобальный футер сайта
- * Отображается на всех страницах с навигацией и категориями
+ * Минималистичный дизайн в стиле IDS
  * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 9.1, 9.3, 9.4
  */
 import { getCollection } from 'astro:content';
 import Wrapper from './Wrapper.astro';
-import Space from './Space.astro';
 import { sortCollectionsByOrder, type CollectionData } from '../lib/collections';
 
 interface Props {
@@ -25,79 +24,100 @@ const collections: CollectionData[] = sortCollectionsByOrder(
 );
 
 const currentYear = new Date().getFullYear();
+
+const navLinks = [
+  { href: '/', label: 'Главная' },
+  { href: '/catalog', label: 'Каталог' },
+  { href: '/blog', label: 'Блог' },
+  { href: '/about', label: 'О нас' }
+];
 ---
 
 <footer class:list={['global-footer', className]}>
   <Wrapper>
-    <Space size="L" />
-    
-    <section>
-      <h4 class="global-footer__title">Навигация</h4>
-      <p>
-        <a href="/">Главная</a> · 
-        <a href="/catalog">Каталог</a> · 
-        <a href="/blog">Блог</a> · 
-        <a href="/about">О нас</a>
-      </p>
-    </section>
+    <div class="global-footer__row">
+      <span class="global-footer__brand">AI Catalog</span>
+      <nav class="global-footer__links">
+        {navLinks.map((link, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={link.href}>{link.label}</a>
+          </>
+        ))}
+      </nav>
+    </div>
 
-    <Space size="M" />
-
-    <section>
-      <h4 class="global-footer__title">Категории</h4>
-      <p>
+    <div class="global-footer__row global-footer__row--secondary">
+      <span class="global-footer__copy">© {currentYear} · 18+</span>
+      <nav class="global-footer__links">
         {collections.map((col, i) => (
           <>
             {i > 0 && ' · '}
-            <a href={`/category/${col.slug}`}>{col.icon} {col.title}</a>
+            <a href={`/category/${col.slug}`}>{col.title}</a>
           </>
         ))}
-      </p>
-    </section>
-
-    <Space size="M" />
-
-    <aside>
-      <h4 class="global-footer__title">AI Каталог СНГ</h4>
-      <p>
-        Лучшие AI-сервисы с фильтрами по оплате картами РФ, поддержке русского языка и доступности без VPN.
-      </p>
-    </aside>
-
-    <Space size="L" />
-
-    <p class="global-footer__copyright">
-      © {currentYear} AI Каталог СНГ. Все права защищены.
-    </p>
-    <p class="global-footer__disclaimer">
-      Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
-    </p>
+      </nav>
+    </div>
   </Wrapper>
 </footer>
 
 <style>
   .global-footer {
-    background: rgba(var(--ids__surface-RGB), 0.5);
+    padding: calc(var(--ids__density) * 0.8em) 0;
+    margin-top: auto;
   }
 
-  .global-footer__title {
-    font-size: 0.9em;
+  .global-footer__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+  }
+
+  .global-footer__row--secondary {
+    margin-top: 0.5em;
+    padding-top: 0.5em;
+    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  .global-footer__brand {
     font-weight: 600;
-    margin: 0 0 0.3em;
-    opacity: 0.7;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: -0.02em;
   }
 
-  .global-footer__copyright {
-    font-size: 0.85em;
-    opacity: 0.6;
-    margin: 0;
+  .global-footer__copy {
+    opacity: 0.4;
+    font-size: 0.9em;
   }
 
-  .global-footer__disclaimer {
-    font-size: 0.8em;
-    opacity: 0.5;
-    margin: 0.5em 0 0;
+  .global-footer__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3em;
+    color: rgba(var(--ids__text-RGB), 0.4);
+  }
+
+  .global-footer__links a {
+    color: rgba(var(--ids__text-RGB), 0.5);
+    text-decoration: none;
+    transition: color 0.5s ease;
+  }
+
+  .global-footer__links a:hover {
+    color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
+  }
+
+  @media (max-width: 767px) {
+    .global-footer__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5em;
+    }
+
+    .global-footer__row--secondary {
+      margin-top: 0.8em;
+      padding-top: 0.8em;
+    }
   }
 </style>

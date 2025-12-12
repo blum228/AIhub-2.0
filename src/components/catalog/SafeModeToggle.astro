@@ -13,50 +13,48 @@ const { defaultEnabled = false } = Astro.props;
   aria-pressed={defaultEnabled}
   title="Безопасный режим (размытие NSFW)"
 >
-  <span class="safe-mode-toggle__icon">👁</span>
-  <span class="safe-mode-toggle__label">Safe Mode</span>
+  <svg class="safe-mode-toggle__icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
 </button>
 
 <style>
   .safe-mode-toggle {
     display: flex;
     align-items: center;
-    gap: 0.4em;
-    padding: 0.4em 0.8em;
-    font-size: 0.85em;
-    font-family: inherit;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    padding: 0;
     border: 1px solid rgba(var(--ids__text-RGB), 0.2);
-    border-radius: 2em;
+    border-radius: var(--ids__radius, 0.3em);
     background: transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.5s ease;
+    color: rgba(var(--ids__text-RGB), 0.4);
   }
 
   .safe-mode-toggle:hover {
-    border-color: rgba(var(--ids__text-RGB), 0.4);
-    background: rgba(var(--ids__text-RGB), 0.05);
+    color: rgb(var(--ids__text-RGB));
+    border-color: rgba(var(--ids__text-RGB), 0.5);
+    transition: all 0s ease;
   }
 
   .safe-mode-toggle[aria-pressed="true"] {
-    background: rgb(var(--ids__link-RGB));
-    color: white;
+    color: rgb(var(--ids__link-RGB));
     border-color: rgb(var(--ids__link-RGB));
+    background: rgba(var(--ids__link-RGB), 0.1);
+  }
+
+  .safe-mode-toggle[aria-pressed="true"]:hover {
+    color: rgb(var(--ids__hover-RGB));
+    border-color: rgb(var(--ids__hover-RGB));
   }
 
   .safe-mode-toggle__icon {
-    font-size: 1.1em;
-  }
-
-  .safe-mode-toggle[aria-pressed="true"] .safe-mode-toggle__icon::after {
-    content: '✓';
-    margin-left: 0.2em;
-    font-size: 0.8em;
-  }
-
-  @media (max-width: 767px) {
-    .safe-mode-toggle__label {
-      display: none;
-    }
+    width: 1em;
+    height: 1em;
   }
 </style>
 
