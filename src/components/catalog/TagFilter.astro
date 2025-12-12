@@ -141,10 +141,6 @@ const categoryLabels: Record<Tag['category'], string> = {
 
     // Фильтруем карточки
     toolCards.forEach(card => {
-      const cardTags = card.querySelector('[data-pagefind-filter="tags"]')?.textContent || '';
-      const cardTagIds = Array.from(card.querySelectorAll('.tool-card__tag'))
-        .map(el => el.textContent?.toLowerCase() || '');
-
       // Получаем теги из data-атрибутов карточки
       const cardElement = card as HTMLElement;
       const tagsAttr = cardElement.dataset.tags?.split(',') || [];
@@ -152,7 +148,14 @@ const categoryLabels: Record<Tag['category'], string> = {
       const show = selectedTags.size === 0 ||
         Array.from(selectedTags).every(tag => tagsAttr.includes(tag));
 
-      (card as HTMLElement).style.display = show ? '' : 'none';
+      // Скрываем родительский .ids__sequence-item чтобы не было дырок в сетке
+      const sequenceItem = cardElement.closest('.ids__sequence-item');
+      if (sequenceItem) {
+        (sequenceItem as HTMLElement).style.display = show ? '' : 'none';
+      } else {
+        // Fallback если нет родителя
+        cardElement.style.display = show ? '' : 'none';
+      }
     });
 
     // Обновляем URL
