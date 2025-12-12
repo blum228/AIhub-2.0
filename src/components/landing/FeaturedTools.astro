@@ -31,9 +31,9 @@ const topTools = sortToolsByRating(tools).slice(0, count);
 ---
 
 {topTools.length > 0 && (
-  <section class="featured-tools">
+  <section>
     <Wrapper>
-      <h2 class="featured-tools__title">{title}</h2>
+      <h2>{title}</h2>
       <Space size="M" />
       <Sequence size="L" gap="M">
         {topTools.map(tool => (
@@ -53,30 +53,7 @@ const topTools = sortToolsByRating(tools).slice(0, count);
         ))}
       </Sequence>
       <Space size="S" />
-      <div class="featured-tools__more">
-        <a href="/catalog" class="featured-tools__link">Смотреть все →</a>
-      </div>
+      <p><a href="/catalog">Смотреть все →</a></p>
     </Wrapper>
   </section>
 )}
-
-<style>
-  .featured-tools__title {
-    text-align: center;
-  }
-
-  .featured-tools__more {
-    text-align: center;
-  }
-
-  .featured-tools__link {
-    color: rgb(var(--ids__link-RGB));
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s;
-  }
-
-  .featured-tools__link:hover {
-    color: rgb(var(--ids__hover-RGB));
-  }
-</style>

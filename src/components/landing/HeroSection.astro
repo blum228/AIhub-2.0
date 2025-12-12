@@ -1,7 +1,7 @@
 ---
 /**
  * Hero секция для landing page
- * Requirements: 1.1, 1.6
+ * Requirements: 1.1, 1.6, 2.1, 2.2, 2.3, 2.4
  */
 import Wrapper from '../Wrapper.astro';
 import TextWidth from '../TextWidth.astro';
@@ -22,61 +22,15 @@ const {
 } = Astro.props;
 ---
 
-<section class="hero">
+<section>
   <Wrapper>
     <TextWidth>
       <Space size="XL" />
-      <h1 class="hero__headline">{headline}</h1>
-      <p class="hero__description">{description}</p>
+      <h1>{headline}</h1>
+      <p class="loud">{description}</p>
       <Space size="M" />
-      <a href={ctaLink} class="hero__cta">{ctaText} →</a>
+      <a href={ctaLink}>{ctaText} →</a>
       <Space size="XL" />
     </TextWidth>
   </Wrapper>
 </section>
-
-<style>
-  .hero {
-    text-align: center;
-    background: linear-gradient(
-      180deg,
-      rgba(var(--ids__surface-RGB), 0.5) 0%,
-      transparent 100%
-    );
-  }
-
-  .hero__headline {
-    font-size: clamp(2em, 5vw, 3.5em);
-    font-weight: 700;
-    line-height: 1.1;
-    margin: 0 0 0.5em;
-    letter-spacing: -0.02em;
-  }
-
-  .hero__description {
-    font-size: clamp(1.1em, 2vw, 1.3em);
-    line-height: 1.5;
-    opacity: 0.8;
-    margin: 0;
-    max-width: 600px;
-    margin-inline: auto;
-  }
-
-  .hero__cta {
-    display: inline-block;
-    padding: 0.8em 2em;
-    font-size: 1.1em;
-    font-weight: 600;
-    background: rgb(var(--ids__link-RGB));
-    color: white;
-    text-decoration: none;
-    border-radius: 0.5em;
-    transition: background 0.2s, transform 0.2s;
-  }
-
-  .hero__cta:hover {
-    background: rgb(var(--ids__hover-RGB));
-    color: white;
-    transform: translateY(-2px);
-  }
-</style>

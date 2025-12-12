@@ -29,7 +29,7 @@ const siteUrl = affiliateLink ? new URL(affiliateLink).hostname.replace('www.', 
 
 <article class="tool-card" data-pagefind-body data-tags={tags.join(',')}>
   <a href={`/tool/${slug}`} class="tool-card__link">
-    <Rounded radius="1em" class="tool-card__image-wrapper">
+    <Rounded class="tool-card__image-wrapper">
       <div class="tool-card__image-container">
         {needsPlaceholder ? (
           <PlaceholderImage title={title} category={primaryCategory} />
@@ -90,11 +90,7 @@ const siteUrl = affiliateLink ? new URL(affiliateLink).hostname.replace('www.', 
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-
-  .tool-card:hover .tool-card__image {
-    transform: scale(1.05);
+    transition: filter 0.3s ease;
   }
 
   .tool-card__placeholder-fallback {

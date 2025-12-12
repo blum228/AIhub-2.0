@@ -6,6 +6,7 @@ import CategoryCard from '../../components/catalog/CategoryCard.astro';
 import Breadcrumbs from '../../components/catalog/Breadcrumbs.astro';
 import ComparisonTable from '../../components/catalog/ComparisonTable.astro';
 import Space from '../../components/Space.astro';
+import TextWidth from '../../components/TextWidth.astro';
 import { getToolsForCollection, getToolCountForCollection, sortCollectionsByOrder } from '../../lib/collections';
 import { sortToolsByRating } from '../../lib/tools';
 import type { ToolData } from '../../lib/types';
@@ -106,31 +107,33 @@ const collectionPageSchema = {
 
   <Space size="M" />
 
-  <div class="category-layout">
-    <main class="category-main">
-      {filteredTools.length > 0 ? (
-        <ToolGrid tools={filteredTools} />
-      ) : (
-        <div class="category-empty">
-          <p>В этой категории пока нет сервисов.</p>
-        </div>
-      )}
+  <main>
+    {filteredTools.length > 0 ? (
+      <ToolGrid tools={filteredTools} />
+    ) : (
+      <aside class="category-empty">
+        <p>В этой категории пока нет сервисов.</p>
+      </aside>
+    )}
 
-      <Space size="L" />
+    <Space size="L" />
 
-      <!-- Comparison Table -->
-      {filteredTools.length > 1 && (
-        <ComparisonTable tools={filteredTools} />
-      )}
+    <!-- Comparison Table -->
+    {filteredTools.length > 1 && (
+      <ComparisonTable tools={filteredTools} />
+    )}
 
-      <Space size="L" />
+    <Space size="L" />
 
+    <TextWidth>
       <section class="category-content">
         <Content />
       </section>
-    </main>
+    </TextWidth>
 
-    <aside class="category-sidebar">
+    <Space size="L" />
+
+    <aside>
       <h3 class="sidebar-title">Другие категории</h3>
       <div class="sidebar-categories">
         {otherCollections.map(col => (
@@ -144,7 +147,7 @@ const collectionPageSchema = {
         ))}
       </div>
     </aside>
-  </div>
+  </main>
 </CatalogLayout>
 
 <style>
@@ -164,13 +167,11 @@ const collectionPageSchema = {
   }
 
   .category-header__title {
-    font-size: 2em;
     margin: 0 0 0.3em;
     line-height: 1.2;
   }
 
   .category-header__description {
-    font-size: 1.1em;
     opacity: 0.8;
     margin: 0 0 0.5em;
     line-height: 1.4;
@@ -181,62 +182,13 @@ const collectionPageSchema = {
     font-size: 0.9em;
     padding: 0.3em 0.8em;
     background: rgb(var(--ids__surface-RGB));
-    border-radius: 1em;
+    border-radius: var(--ids__radius);
     opacity: 0.8;
-  }
-
-  .category-layout {
-    display: grid;
-    grid-template-columns: 1fr 280px;
-    gap: 2em;
-  }
-
-  .category-main {
-    min-width: 0;
   }
 
   .category-empty {
     padding: 3em;
-    text-align: center;
-    background: rgb(var(--ids__surface-RGB));
-    border-radius: var(--ids__radius, 1em);
     opacity: 0.7;
-  }
-
-  .category-content {
-    padding: 1.5em;
-    background: rgba(var(--ids__surface-RGB), 0.5);
-    border-radius: var(--ids__radius, 1em);
-  }
-
-  .category-content :global(h2) {
-    font-size: 1.3em;
-    margin: 0 0 0.5em;
-  }
-
-  .category-content :global(h3) {
-    font-size: 1.1em;
-    margin: 1.5em 0 0.5em;
-  }
-
-  .category-content :global(p) {
-    margin: 0 0 1em;
-    line-height: 1.6;
-  }
-
-  .category-content :global(ul) {
-    margin: 0 0 1em;
-    padding-left: 1.5em;
-  }
-
-  .category-content :global(li) {
-    margin-bottom: 0.3em;
-  }
-
-  .category-sidebar {
-    position: sticky;
-    top: 1em;
-    align-self: start;
   }
 
   .sidebar-title {
@@ -246,38 +198,14 @@ const collectionPageSchema = {
   }
 
   .sidebar-categories {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 0.75em;
-  }
-
-  @media (max-width: 1023px) {
-    .category-layout {
-      grid-template-columns: 1fr;
-    }
-
-    .category-sidebar {
-      position: static;
-      order: -1;
-    }
-
-    .sidebar-categories {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    }
   }
 
   @media (max-width: 767px) {
     .category-header__icon {
       font-size: 2em;
-    }
-
-    .category-header__title {
-      font-size: 1.5em;
-    }
-
-    .category-header__description {
-      font-size: 1em;
     }
   }
 </style>

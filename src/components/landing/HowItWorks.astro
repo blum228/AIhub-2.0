@@ -1,12 +1,13 @@
 ---
 /**
  * Секция "Как это работает" для landing page
- * Requirements: 1.4
+ * Requirements: 1.4, 2.4, 4.2
  */
 import Wrapper from '../Wrapper.astro';
 import Space from '../Space.astro';
 import Sequence from '../Sequence.astro';
 import SequenceItem from '../SequenceItem.astro';
+import Aside from '../Aside.astro';
 
 interface Step {
   icon: string;
@@ -45,19 +46,20 @@ const defaultSteps: Step[] = [
 const { title = 'Как это работает', steps = defaultSteps } = Astro.props;
 ---
 
-<section class="how-it-works">
+<section>
   <Wrapper>
-    <h2 class="how-it-works__title">{title}</h2>
+    <h2>{title}</h2>
     <Space size="M" />
     <Sequence size="L" gap="M">
       {steps.map((step, index) => (
         <SequenceItem>
-          <div class="how-it-works__step">
-            <span class="how-it-works__number">{index + 1}</span>
-            <span class="how-it-works__icon">{step.icon}</span>
-            <h3 class="how-it-works__step-title">{step.title}</h3>
-            <p class="how-it-works__step-description">{step.description}</p>
-          </div>
+          <aside class="how-it-works__step">
+            <p class="how-it-works__header">
+              <mark>{index + 1}</mark> {step.icon}
+            </p>
+            <p><strong>{step.title}</strong></p>
+            <p>{step.description}</p>
+          </aside>
         </SequenceItem>
       ))}
     </Sequence>
@@ -65,48 +67,12 @@ const { title = 'Как это работает', steps = defaultSteps } = Astro
 </section>
 
 <style>
-  .how-it-works__title {
-    text-align: center;
-  }
-
   .how-it-works__step {
-    text-align: center;
-    padding: calc(var(--ids__density) * 1em);
-    background: rgb(var(--ids__surface-RGB));
-    border-radius: var(--ids__radius);
     height: 100%;
   }
 
-  .how-it-works__number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2em;
-    height: 2em;
-    font-size: 0.9em;
-    font-weight: 600;
-    background: rgb(var(--ids__link-RGB));
-    color: white;
-    border-radius: 50%;
-    margin-bottom: 0.5em;
-  }
-
-  .how-it-works__icon {
-    display: block;
-    font-size: 2.5em;
-    margin-bottom: 0.3em;
-  }
-
-  .how-it-works__step-title {
-    font-size: 1.1em;
-    font-weight: 600;
-    margin: 0 0 0.5em;
-  }
-
-  .how-it-works__step-description {
-    font-size: 0.95em;
-    opacity: 0.8;
-    line-height: 1.5;
-    margin: 0;
+  .how-it-works__header {
+    font-size: 1.5em;
+    margin: 0 0 0.3em;
   }
 </style>

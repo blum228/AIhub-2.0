@@ -2,10 +2,11 @@
 /**
  * Глобальный футер сайта
  * Отображается на всех страницах с навигацией и категориями
- * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5
+ * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 9.1, 9.3, 9.4
  */
 import { getCollection } from 'astro:content';
 import Wrapper from './Wrapper.astro';
+import Space from './Space.astro';
 import { sortCollectionsByOrder, type CollectionData } from '../lib/collections';
 
 interface Props {
@@ -28,135 +29,75 @@ const currentYear = new Date().getFullYear();
 
 <footer class:list={['global-footer', className]}>
   <Wrapper>
-    <div class="global-footer__inner">
-      <div class="global-footer__section">
-        <h4 class="global-footer__title">Навигация</h4>
-        <ul class="global-footer__list">
-          <li><a href="/" class="global-footer__link">Главная</a></li>
-          <li><a href="/catalog" class="global-footer__link">Каталог</a></li>
-          <li><a href="/blog" class="global-footer__link">Блог</a></li>
-          <li><a href="/about" class="global-footer__link">О нас</a></li>
-        </ul>
-      </div>
-
-      <div class="global-footer__section">
-        <h4 class="global-footer__title">Категории</h4>
-        <ul class="global-footer__list">
-          {collections.map(col => (
-            <li>
-              <a href={`/category/${col.slug}`} class="global-footer__link">
-                <span class="global-footer__icon">{col.icon}</span>
-                {col.title}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div class="global-footer__section global-footer__section--info">
-        <h4 class="global-footer__title">AI Каталог СНГ</h4>
-        <p class="global-footer__text">
-          Лучшие AI-сервисы с фильтрами по оплате картами РФ, поддержке русского языка и доступности без VPN.
-        </p>
-      </div>
-    </div>
-
-    <div class="global-footer__bottom">
-      <p>© {currentYear} AI Каталог СНГ. Все права защищены.</p>
-      <p class="global-footer__disclaimer">
-        Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
+    <Space size="L" />
+    
+    <section>
+      <h4 class="global-footer__title">Навигация</h4>
+      <p>
+        <a href="/">Главная</a> · 
+        <a href="/catalog">Каталог</a> · 
+        <a href="/blog">Блог</a> · 
+        <a href="/about">О нас</a>
       </p>
-    </div>
+    </section>
+
+    <Space size="M" />
+
+    <section>
+      <h4 class="global-footer__title">Категории</h4>
+      <p>
+        {collections.map((col, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a href={`/category/${col.slug}`}>{col.icon} {col.title}</a>
+          </>
+        ))}
+      </p>
+    </section>
+
+    <Space size="M" />
+
+    <aside>
+      <h4 class="global-footer__title">AI Каталог СНГ</h4>
+      <p>
+        Лучшие AI-сервисы с фильтрами по оплате картами РФ, поддержке русского языка и доступности без VPN.
+      </p>
+    </aside>
+
+    <Space size="L" />
+
+    <p class="global-footer__copyright">
+      © {currentYear} AI Каталог СНГ. Все права защищены.
+    </p>
+    <p class="global-footer__disclaimer">
+      Сайт содержит материалы 18+. Используя сайт, вы подтверждаете своё совершеннолетие.
+    </p>
   </Wrapper>
 </footer>
 
 <style>
   .global-footer {
-    padding: calc(var(--ids__density) * 1.5em) 0 calc(var(--ids__density) * 1em);
-    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
     background: rgba(var(--ids__surface-RGB), 0.5);
-  }
-
-  .global-footer__inner {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: calc(var(--ids__density) * 1.5em);
-    margin-bottom: calc(var(--ids__density) * 1.5em);
-  }
-
-  .global-footer__section--info {
-    max-width: 300px;
   }
 
   .global-footer__title {
     font-size: 0.9em;
     font-weight: 600;
-    margin: 0 0 calc(var(--ids__density) * 0.5em);
+    margin: 0 0 0.3em;
     opacity: 0.7;
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
-  .global-footer__list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .global-footer__list li {
-    margin-bottom: 0.5em;
-  }
-
-  .global-footer__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    color: rgb(var(--ids__link-RGB));
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .global-footer__link:hover {
-    color: rgb(var(--ids__hover-RGB));
-  }
-
-  .global-footer__icon {
-    font-size: 1.1em;
-  }
-
-  .global-footer__text {
-    font-size: 0.9em;
-    opacity: 0.7;
-    line-height: 1.5;
-    margin: 0;
-  }
-
-  .global-footer__bottom {
-    text-align: center;
-    padding-top: calc(var(--ids__density) * 1em);
-    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
-  }
-
-  .global-footer__bottom p {
-    margin: 0;
+  .global-footer__copyright {
     font-size: 0.85em;
     opacity: 0.6;
+    margin: 0;
   }
 
   .global-footer__disclaimer {
-    margin-top: 0.5em !important;
-    font-size: 0.8em !important;
-    opacity: 0.5 !important;
-  }
-
-  @media (max-width: 767px) {
-    .global-footer__inner {
-      grid-template-columns: 1fr;
-      text-align: center;
-    }
-
-    .global-footer__section--info {
-      max-width: none;
-    }
+    font-size: 0.8em;
+    opacity: 0.5;
+    margin: 0.5em 0 0;
   }
 </style>

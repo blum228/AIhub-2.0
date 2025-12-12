@@ -2,7 +2,7 @@
 /**
  * Глобальный хедер сайта
  * Отображается на всех страницах с навигацией и SafeModeToggle
- * Requirements: 2.1, 2.2, 2.3
+ * Requirements: 2.1, 2.2, 2.3, 3.1, 3.2, 3.3
  */
 import Wrapper from './Wrapper.astro';
 import SafeModeToggle from './catalog/SafeModeToggle.astro';
@@ -87,10 +87,7 @@ const navLinks = [
   .global-header {
     padding: calc(var(--ids__density) * 0.5em) 0;
     border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
-    position: sticky;
-    top: 0;
-    background: rgb(var(--ids__surface-RGB));
-    z-index: 100;
+    background: rgb(var(--ids__background-RGB));
   }
 
   .global-header__inner {
@@ -105,8 +102,6 @@ const navLinks = [
     text-decoration: none;
     color: rgb(var(--ids__text-RGB));
     font-weight: 700;
-    font-size: 1.3em;
-    letter-spacing: -0.02em;
   }
 
   .global-header__logo:hover {

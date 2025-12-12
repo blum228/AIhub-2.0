@@ -14,7 +14,7 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
 ---
 
 <a href={`/category/${slug}`} class:list={['category-card', { 'category-card--featured': featured }]}>
-  <Rounded radius="1em" class="category-card__inner">
+  <Rounded class="category-card__inner">
     <div class="category-card__content">
       <h3 class="category-card__title">{title}</h3>
       <p class="category-card__description">{description}</p>
@@ -28,11 +28,6 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
     display: block;
     text-decoration: none;
     color: inherit;
-    transition: transform 0.2s ease;
-  }
-
-  .category-card:hover {
-    transform: translateY(-2px);
   }
 
   .category-card :global(.category-card__inner) {
@@ -45,10 +40,7 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
   }
 
   .category-card--featured :global(.category-card__inner) {
-    background: linear-gradient(135deg, 
-      rgba(var(--ids__surface-RGB), 1) 0%, 
-      rgba(var(--ids__surface-RGB), 0.8) 100%
-    );
+    background: rgb(var(--ids__surface-RGB));
     border: 1px solid rgba(var(--ids__text-RGB), 0.1);
   }
 
@@ -86,7 +78,7 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
     font-size: 0.9em;
     font-weight: 600;
     background: rgba(var(--ids__text-RGB), 0.1);
-    border-radius: 1em;
+    border-radius: var(--ids__radius);
   }
 
   @media (max-width: 767px) {
