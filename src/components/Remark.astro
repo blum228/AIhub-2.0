@@ -1,0 +1,15 @@
+---
+/**
+ * Ремарка автора
+ * Текст в скобках курсивом
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p class:list={["remark", className]}>
+  (<em><slot /></em>)
+</p>

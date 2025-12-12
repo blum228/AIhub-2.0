@@ -1,0 +1,101 @@
+---
+/**
+ * Блок быстрых сценариев для главной страницы
+ * Requirements: 1.3, 2.1, 2.2, 2.3
+ */
+interface Props {
+  title?: string;
+}
+
+const { title = 'Быстрый выбор' } = Astro.props;
+
+const scenarios = [
+  {
+    icon: '🌐',
+    label: 'Без VPN',
+    description: 'Работают в России напрямую',
+    link: '/catalog?tags=no-vpn'
+  },
+  {
+    icon: '💳',
+    label: 'Карты РФ',
+    description: 'Оплата Сбером, Тинькофф',
+    link: '/catalog?tags=russian-cards'
+  },
+  {
+    icon: '🆓',
+    label: 'Бесплатно',
+    description: 'Без оплаты или с бесплатным тарифом',
+    link: '/catalog?tags=free'
+  }
+];
+---
+
+<section class="quick-scenarios">
+  <h2 class="quick-scenarios__title">{title}</h2>
+  <div class="quick-scenarios__grid">
+    {scenarios.map(scenario => (
+      <a href={scenario.link} class="quick-scenarios__card">
+        <span class="quick-scenarios__icon">{scenario.icon}</span>
+        <span class="quick-scenarios__label">{scenario.label}</span>
+        <span class="quick-scenarios__desc">{scenario.description}</span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .quick-scenarios {
+    text-align: center;
+  }
+
+  .quick-scenarios__title {
+    font-size: 1.2em;
+    margin: 0 0 1em;
+    opacity: 0.8;
+  }
+
+  .quick-scenarios__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+  }
+
+  .quick-scenarios__card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1.5em 1em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: var(--ids__radius, 12px);
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .quick-scenarios__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .quick-scenarios__icon {
+    font-size: 2em;
+  }
+
+  .quick-scenarios__label {
+    font-weight: 600;
+    font-size: 1.1em;
+  }
+
+  .quick-scenarios__desc {
+    font-size: 0.85em;
+    opacity: 0.7;
+  }
+
+  @media (max-width: 600px) {
+    .quick-scenarios__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

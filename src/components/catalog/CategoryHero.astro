@@ -1,0 +1,122 @@
+---
+/**
+ * CategoryHero - Magazine-style hero section for category pages
+ * Editorial typography with strong visual hierarchy
+ */
+interface Props {
+  icon?: string;
+  title: string;
+  description: string;
+  toolCount: number;
+}
+
+const { title, description, toolCount } = Astro.props;
+
+const toolWord = toolCount === 1 ? 'сервис' : 
+  toolCount >= 2 && toolCount <= 4 ? 'сервиса' : 'сервисов';
+---
+
+<header class="category-hero">
+  <div class="category-hero__kicker">
+    <span class="category-hero__label">Коллекция</span>
+  </div>
+  
+  <h1 class="category-hero__title">{title}</h1>
+  
+  <div class="category-hero__meta">
+    <p class="category-hero__description">{description}</p>
+    <span class="category-hero__count">{toolCount} {toolWord}</span>
+  </div>
+  
+  <div class="category-hero__line" aria-hidden="true"></div>
+</header>
+
+<style>
+  .category-hero {
+    display: flex;
+    flex-direction: column;
+    padding: 3em 0 2em;
+  }
+
+  .category-hero__kicker {
+    margin-bottom: 0.8em;
+  }
+
+  .category-hero__label {
+    font-size: 0.75em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.5;
+  }
+
+  .category-hero__title {
+    font-size: clamp(2.8em, 8vw, 5em);
+    font-weight: 700;
+    margin: 0 0 0.4em;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    max-width: 14em;
+  }
+
+  .category-hero__meta {
+    display: flex;
+    align-items: flex-start;
+    gap: 2em;
+    flex-wrap: wrap;
+  }
+
+  .category-hero__description {
+    font-size: 1.15em;
+    line-height: 1.55;
+    opacity: 0.65;
+    margin: 0;
+    max-width: 36em;
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .category-hero__count {
+    font-size: 0.8em;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    background: rgb(var(--ids__surface-RGB));
+    border-radius: 2em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .category-hero__line {
+    margin-top: 2.5em;
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      rgba(var(--ids__text-RGB), 0.15) 0%,
+      rgba(var(--ids__text-RGB), 0.05) 100%
+    );
+  }
+
+  @media (max-width: 767px) {
+    .category-hero {
+      padding: 2em 0 1.5em;
+    }
+
+    .category-hero__icon {
+      font-size: 1.5em;
+    }
+
+    .category-hero__meta {
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    .category-hero__description {
+      font-size: 1.05em;
+      min-width: 0;
+    }
+
+    .category-hero__line {
+      margin-top: 1.5em;
+    }
+  }
+</style>

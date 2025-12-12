@@ -1,0 +1,131 @@
+---
+/**
+ * AccessBar - Horizontal compact access info bar
+ * Displays VPN, Russian cards, language, and payment methods
+ * Uses IDS semantic colors (success/warning/info)
+ * Requirements: 2.1, 2.2, 2.3, 2.4
+ */
+
+interface Props {
+  requiresVpn: boolean;
+  acceptsRussianCards: boolean;
+  supportsRussian: boolean;
+  paymentMethods?: string[];
+}
+
+const { requiresVpn, acceptsRussianCards, supportsRussian, paymentMethods = [] } = Astro.props;
+
+const paymentLabels: Record<string, string> = {
+  card: 'Visa/MC',
+  crypto: 'Крипто',
+  paypal: 'PayPal',
+  sbp: 'СБП',
+  yoomoney: 'ЮMoney'
+};
+---
+
+<div class="access-bar">
+  <div class={`access-bar__item ${requiresVpn ? 'access-bar__item--warning' : 'access-bar__item--success'}`}>
+    <span class="access-bar__label">VPN</span>
+    <span class="access-bar__value">
+      {requiresVpn ? 'Нужен' : 'Не нужен'}
+    </span>
+  </div>
+  
+  <div class={`access-bar__item ${acceptsRussianCards ? 'access-bar__item--success' : 'access-bar__item--warning'}`}>
+    <span class="access-bar__label">Карты РФ</span>
+    <span class="access-bar__value">
+      {acceptsRussianCards ? 'Принимает' : 'Не принимает'}
+    </span>
+  </div>
+  
+  <div class={`access-bar__item ${supportsRussian ? 'access-bar__item--success' : 'access-bar__item--info'}`}>
+    <span class="access-bar__label">Русский</span>
+    <span class="access-bar__value">
+      {supportsRussian ? 'Есть' : 'Нет'}
+    </span>
+  </div>
+  
+  {paymentMethods.length > 0 && (
+    <div class="access-bar__item access-bar__item--info access-bar__item--wide">
+      <span class="access-bar__label">Оплата</span>
+      <span class="access-bar__value">
+        {paymentMethods.map(m => paymentLabels[m] || m).join(', ')}
+      </span>
+    </div>
+  )}
+</div>
+
+<style>
+  .access-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1.25rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid rgba(var(--ids__text-RGB), 0.1);
+    border-bottom: 1px solid rgba(var(--ids__text-RGB), 0.1);
+  }
+
+  @media (max-width: 600px) {
+    .access-bar {
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+
+  .access-bar__item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid transparent;
+  }
+
+  .access-bar__item--success {
+    border-left-color: rgb(var(--ids__success-RGB));
+  }
+
+  .access-bar__item--warning {
+    border-left-color: rgb(var(--ids__warning-RGB));
+  }
+
+  .access-bar__item--info {
+    border-left-color: rgb(var(--ids__info-RGB));
+  }
+
+  .access-bar__item--wide {
+    flex-basis: 100%;
+  }
+
+  @media (min-width: 600px) {
+    .access-bar__item--wide {
+      flex-basis: auto;
+    }
+  }
+
+  .access-bar__label {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: rgba(var(--ids__text-RGB), 0.5);
+  }
+
+  .access-bar__value {
+    font-size: 0.9375rem;
+    font-weight: 600;
+  }
+
+  .access-bar__item--success .access-bar__value {
+    color: rgb(var(--ids__success-RGB));
+  }
+
+  .access-bar__item--warning .access-bar__value {
+    color: rgb(var(--ids__warning-RGB));
+  }
+
+  .access-bar__item--info .access-bar__value {
+    color: rgb(var(--ids__info-RGB));
+  }
+</style>

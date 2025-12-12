@@ -1,0 +1,15 @@
+---
+/**
+ * Реплика в диалоге
+ * Добавляет em-dash (—) в начале строки
+ */
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p class:list={["dialog__line", className]}>
+  — <slot />
+</p>
