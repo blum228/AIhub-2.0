@@ -41,11 +41,8 @@ const categoryLabels: Record<Tag['category'], string> = {
   .tag-filter {
     display: flex;
     flex-wrap: wrap;
-    gap: calc(var(--ids__density) * 0.6em);
-    align-items: flex-start;
-    padding: calc(var(--ids__density) * 0.6em);
-    background: rgb(var(--ids__surface-RGB));
-    border-radius: var(--ids__radius);
+    gap: calc(var(--ids__density) * 0.8em);
+    align-items: center;
   }
 
   .tag-filter__category {
@@ -105,21 +102,23 @@ const categoryLabels: Record<Tag['category'], string> = {
     color: rgb(var(--ids__accent-RGB));
     cursor: pointer;
     transition: all 0.2s ease;
-    margin-left: auto;
+    align-self: flex-end;
   }
 
   .tag-filter__clear:hover {
+    border-color: rgb(var(--ids__accent-RGB));
     background: rgba(var(--ids__accent-RGB), 0.1);
   }
 
   @media (max-width: 767px) {
     .tag-filter {
       flex-direction: column;
+      align-items: stretch;
     }
 
     .tag-filter__clear {
-      margin-left: 0;
-      width: 100%;
+      align-self: stretch;
+      text-align: center;
     }
   }
 </style>

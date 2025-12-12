@@ -60,11 +60,10 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
     <Wrapper>
       <div class="catalog-header__inner">
         <a href="/" class="catalog-header__logo">
-          <span class="catalog-header__logo-icon">🤖</span>
           <span class="catalog-header__logo-text">AI Catalog</span>
         </a>
         <nav class="catalog-header__nav">
-          <a href="/">Каталог</a>
+          <a href="/catalog">Каталог</a>
           <a href="/telegram-bots">Telegram боты</a>
         </nav>
         <SafeModeToggle />
@@ -103,19 +102,15 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
   .catalog-header__logo {
     display: flex;
     align-items: center;
-    gap: 0.4em;
     text-decoration: none;
     color: rgb(var(--ids__text-RGB));
-    font-weight: 600;
-    font-size: 1.2em;
+    font-weight: 700;
+    font-size: 1.3em;
+    letter-spacing: -0.02em;
   }
 
   .catalog-header__logo:hover {
-    color: rgb(var(--ids__hover-RGB));
-  }
-
-  .catalog-header__logo-icon {
-    font-size: 1.3em;
+    color: rgb(var(--ids__link-RGB));
   }
 
   .catalog-header__nav {
@@ -159,8 +154,8 @@ const fullOgImage = ogImage ? new URL(ogImage, siteUrl).toString() : `${siteUrl}
       justify-content: center;
     }
 
-    .catalog-header__logo-text {
-      display: none;
+    .catalog-header__logo {
+      font-size: 1.1em;
     }
   }
 </style>

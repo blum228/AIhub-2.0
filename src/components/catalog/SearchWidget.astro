@@ -93,7 +93,8 @@ const { placeholder = 'Поиск AI-сервисов...' } = Astro.props;
         }
       });
     } catch (e) {
-      container.innerHTML = '<div class="pagefind-ui__message">Поиск доступен после сборки сайта (npm run build)</div>';
+      // Поиск недоступен в dev режиме, скрываем контейнер
+      container.style.display = 'none';
     }
   })();
 </script>

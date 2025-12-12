@@ -15,7 +15,6 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
 
 <a href={`/category/${slug}`} class:list={['category-card', { 'category-card--featured': featured }]}>
   <Rounded radius="1em" class="category-card__inner">
-    <span class="category-card__icon">{icon}</span>
     <div class="category-card__content">
       <h3 class="category-card__title">{title}</h3>
       <p class="category-card__description">{description}</p>
@@ -51,11 +50,6 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
       rgba(var(--ids__surface-RGB), 0.8) 100%
     );
     border: 1px solid rgba(var(--ids__text-RGB), 0.1);
-  }
-
-  .category-card__icon {
-    font-size: 2em;
-    flex-shrink: 0;
   }
 
   .category-card__content {
@@ -96,10 +90,6 @@ const { slug, title, description, icon, toolCount, featured = false } = Astro.pr
   }
 
   @media (max-width: 767px) {
-    .category-card__icon {
-      font-size: 1.5em;
-    }
-
     .category-card__description {
       display: none;
     }

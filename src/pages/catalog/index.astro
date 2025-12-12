@@ -9,7 +9,8 @@ import Space from '../../components/Space.astro';
 import TextWidth from '../../components/TextWidth.astro';
 import Sequence from '../../components/Sequence.astro';
 import SequenceItem from '../../components/SequenceItem.astro';
-import { sortToolsByRating, filterToolsByTags } from '../../lib/tools';
+import Rounded from '../../components/Rounded.astro';
+import { sortToolsByRating } from '../../lib/tools';
 import { getToolCountForCollection, sortCollectionsByOrder } from '../../lib/collections';
 import type { ToolData } from '../../lib/types';
 import type { CollectionData } from '../../lib/collections';
@@ -89,39 +90,20 @@ const telegramBots = sortedTools.filter(t => t.tags.includes('telegram-bot')).sl
   {telegramBots.length > 0 && (
     <>
       <Space size="L" />
-      <section class="featured-section">
-        <h2 class="featured-title">
-          <span>🤖</span> Telegram боты
-          <a href="/telegram-bots" class="featured-link">Все боты →</a>
-        </h2>
-        <Space size="S" />
-        <ToolGrid tools={telegramBots} />
-      </section>
+      <Rounded radius="1em">
+        <aside>
+          <Sequence size="XL" gap="S">
+            <SequenceItem>
+              <h3>Telegram боты</h3>
+            </SequenceItem>
+            <SequenceItem>
+              <a href="/telegram-bots">Все боты</a>
+            </SequenceItem>
+          </Sequence>
+          <Space size="S" />
+          <ToolGrid tools={telegramBots} />
+        </aside>
+      </Rounded>
     </>
   )}
 </CatalogLayout>
-
-<style>
-  .featured-section {
-    padding: calc(var(--ids__density) * 1em);
-    background: rgb(var(--ids__surface-RGB));
-    border-radius: var(--ids__radius);
-  }
-
-  .featured-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-  }
-
-  .featured-link {
-    margin-left: auto;
-    font-size: 0.5em;
-    font-weight: normal;
-    color: rgb(var(--ids__link-RGB));
-  }
-
-  .featured-link:hover {
-    color: rgb(var(--ids__hover-RGB));
-  }
-</style>
