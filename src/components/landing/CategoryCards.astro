@@ -4,7 +4,6 @@
  * Requirements: 1.3
  */
 import { getCollection } from 'astro:content';
-import Wrapper from '../Wrapper.astro';
 import Space from '../Space.astro';
 import Sequence from '../Sequence.astro';
 import SequenceItem from '../SequenceItem.astro';
@@ -37,23 +36,21 @@ const tools: ToolData[] = toolsCollection.map(entry => ({
 
 {collections.length > 0 && (
   <section class="category-cards">
-    <Wrapper>
-      <h2 class="category-cards__title">{title}</h2>
-      <Space size="M" />
-      <Sequence size="L" gap="M">
-        {collections.map(col => (
-          <SequenceItem>
-            <CategoryCard
-              slug={col.slug}
-              title={col.title}
-              description={col.description}
-              icon={col.icon}
-              toolCount={getToolCountForCollection(tools, col)}
-            />
-          </SequenceItem>
-        ))}
-      </Sequence>
-    </Wrapper>
+    <h2 class="category-cards__title">{title}</h2>
+    <Space size="M" />
+    <Sequence size="L" gap="M">
+      {collections.map(col => (
+        <SequenceItem>
+          <CategoryCard
+            slug={col.slug}
+            title={col.title}
+            description={col.description}
+            icon={col.icon}
+            toolCount={getToolCountForCollection(tools, col)}
+          />
+        </SequenceItem>
+      ))}
+    </Sequence>
   </section>
 )}
 

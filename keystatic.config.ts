@@ -49,6 +49,10 @@ export default config({
           ],
           defaultValue: 'freemium'
         }),
+        priceFrom: fields.number({
+          label: 'Цена от ($ в месяц)',
+          description: 'Минимальная цена платной подписки'
+        }),
         isNsfw: fields.checkbox({ label: 'NSFW контент', defaultValue: true }),
         affiliateLink: fields.url({ label: 'Партнёрская ссылка', validation: { isRequired: true } }),
         rating: fields.number({

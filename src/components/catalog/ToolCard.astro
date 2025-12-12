@@ -1,7 +1,6 @@
 ---
 import Rounded from '../Rounded.astro';
 import PlaceholderImage from './PlaceholderImage.astro';
-import { PRICE_MODEL_LABELS } from '../../lib/types';
 
 interface Props {
   slug: string;
@@ -10,21 +9,20 @@ interface Props {
   coverImage: string;
   gifPreview?: string;
   priceModel: 'free' | 'freemium' | 'paid';
+  priceFrom?: number;
   tags: string[];
   isNsfw: boolean;
   affiliateLink?: string;
 }
 
 const { 
-  slug, title, coverImage, gifPreview, priceModel, tags, isNsfw, affiliateLink
+  slug, title, coverImage, gifPreview, priceModel, priceFrom, tags, isNsfw
 } = Astro.props;
 
-const priceLabel = PRICE_MODEL_LABELS[priceModel];
+// Формируем лейбл цены: "Бесплатно" или "от X$"
+const priceLabel = priceModel === 'free' ? 'Бесплатно' : priceFrom ? `от ${priceFrom}$` : 'Платно';
 const needsPlaceholder = !coverImage || coverImage.trim() === '';
 const primaryCategory = tags.find(t => ['chatbot', 'image-gen', 'telegram-bot', 'video'].includes(t));
-
-// Извлекаем домен из affiliateLink для отображения
-const siteUrl = affiliateLink ? new URL(affiliateLink).hostname.replace('www.', '').toUpperCase() : '';
 ---
 
 <article class="tool-card" data-pagefind-body data-tags={tags.join(',')}>
@@ -54,7 +52,6 @@ const siteUrl = affiliateLink ? new URL(affiliateLink).hostname.replace('www.', 
 
     <div class="tool-card__content">
       <h3 class="tool-card__title" data-pagefind-meta="title">{title}</h3>
-      {siteUrl && <span class="tool-card__site">{siteUrl}</span>}
       <span class="tool-card__price">{priceLabel}</span>
     </div>
   </a>
@@ -118,18 +115,10 @@ const siteUrl = affiliateLink ? new URL(affiliateLink).hostname.replace('www.', 
     color: rgb(var(--ids__link-RGB));
   }
 
-  .tool-card__site {
-    display: block;
-    font-size: 0.75em;
-    opacity: 0.6;
-    margin-bottom: 0.3em;
-    letter-spacing: 0.02em;
-  }
-
   .tool-card__price {
     display: block;
     font-size: 0.95em;
-    font-weight: 500;
+    opacity: 0.7;
   }
 </style>
 

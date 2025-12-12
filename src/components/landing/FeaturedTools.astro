@@ -5,7 +5,6 @@
  * Requirements: 1.2
  */
 import { getCollection } from 'astro:content';
-import Wrapper from '../Wrapper.astro';
 import Space from '../Space.astro';
 import Sequence from '../Sequence.astro';
 import SequenceItem from '../SequenceItem.astro';
@@ -32,28 +31,26 @@ const topTools = sortToolsByRating(tools).slice(0, count);
 
 {topTools.length > 0 && (
   <section>
-    <Wrapper>
-      <h2>{title}</h2>
-      <Space size="M" />
-      <Sequence size="L" gap="M">
-        {topTools.map(tool => (
-          <SequenceItem>
-            <ToolCard
-              slug={tool.slug}
-              title={tool.title}
-              shortDescription={tool.shortDescription}
-              coverImage={tool.coverImage}
-              gifPreview={tool.gifPreview}
-              priceModel={tool.priceModel}
-              tags={tool.tags}
-              isNsfw={tool.isNsfw}
-              affiliateLink={tool.affiliateLink}
-            />
-          </SequenceItem>
-        ))}
-      </Sequence>
-      <Space size="S" />
-      <p><a href="/catalog">Смотреть все →</a></p>
-    </Wrapper>
+    <h2>{title}</h2>
+    <Space size="M" />
+    <Sequence size="L" gap="M">
+      {topTools.map(tool => (
+        <SequenceItem>
+          <ToolCard
+            slug={tool.slug}
+            title={tool.title}
+            shortDescription={tool.shortDescription}
+            coverImage={tool.coverImage}
+            gifPreview={tool.gifPreview}
+            priceModel={tool.priceModel}
+            priceFrom={tool.priceFrom}
+            tags={tool.tags}
+            isNsfw={tool.isNsfw}
+          />
+        </SequenceItem>
+      ))}
+    </Sequence>
+    <Space size="S" />
+    <p><a href="/catalog">Смотреть все →</a></p>
   </section>
 )}

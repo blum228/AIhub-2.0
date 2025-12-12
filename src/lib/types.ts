@@ -39,6 +39,7 @@ export interface ToolData {
   gifPreview?: string;
   tags: string[];
   priceModel: 'free' | 'freemium' | 'paid';
+  priceFrom?: number;
   isNsfw: boolean;
   affiliateLink: string;
   rating?: number;

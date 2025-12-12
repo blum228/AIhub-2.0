@@ -3,7 +3,6 @@
  * Hero секция для landing page
  * Requirements: 1.1, 1.6, 2.1, 2.2, 2.3, 2.4
  */
-import Wrapper from '../Wrapper.astro';
 import TextWidth from '../TextWidth.astro';
 import Space from '../Space.astro';
 
@@ -23,14 +22,30 @@ const {
 ---
 
 <section>
-  <Wrapper>
-    <TextWidth>
-      <Space size="XL" />
-      <h1>{headline}</h1>
-      <p class="loud">{description}</p>
-      <Space size="M" />
-      <a href={ctaLink}>{ctaText} →</a>
-      <Space size="XL" />
-    </TextWidth>
-  </Wrapper>
+  <TextWidth>
+    <Space size="XL" />
+    <h1>{headline}</h1>
+    <p class="loud">{description}</p>
+    <Space size="M" />
+    <a href={ctaLink} class="hero-button">{ctaText}</a>
+    <Space size="XL" />
+  </TextWidth>
 </section>
+
+<style>
+  .hero-button {
+    display: inline-block;
+    padding: 0.6em 1.2em;
+    background: rgb(var(--ids__text-RGB));
+    color: rgb(var(--ids__background-RGB));
+    text-decoration: none;
+    border-radius: var(--ids__radius);
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero-button:hover {
+    opacity: 0.85;
+    color: rgb(var(--ids__background-RGB));
+  }
+</style>
