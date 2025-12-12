@@ -22,7 +22,10 @@ const posts = await getRecentBlogPosts(count);
 
 {posts.length > 0 && (
   <section class="blog-preview">
-    <h2 class="blog-preview__title">{title}</h2>
+    <div class="blog-preview__header">
+      <h2 class="blog-preview__title">{title}</h2>
+      <a href="/blog" class="blog-preview__link">Все статьи →</a>
+    </div>
     <Space size="M" />
     <Sequence size="L" gap="M">
       {posts.map(post => (
@@ -31,30 +34,29 @@ const posts = await getRecentBlogPosts(count);
         </SequenceItem>
       ))}
     </Sequence>
-    <Space size="S" />
-    <div class="blog-preview__more">
-      <a href="/blog" class="blog-preview__link">Все статьи →</a>
-    </div>
   </section>
 )}
 
 <style>
-  .blog-preview__title {
-    text-align: center;
+  .blog-preview__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .blog-preview__more {
-    text-align: center;
+  .blog-preview__title {
+    margin: 0;
   }
 
   .blog-preview__link {
-    color: rgb(var(--ids__link-RGB));
+    color: rgba(var(--ids__text-RGB), 0.6);
     text-decoration: none;
     font-weight: 500;
-    transition: color 0.2s;
+    transition: color 0.5s ease;
   }
 
   .blog-preview__link:hover {
-    color: rgb(var(--ids__hover-RGB));
+    color: rgb(var(--ids__text-RGB));
+    transition: color 0s ease;
   }
 </style>

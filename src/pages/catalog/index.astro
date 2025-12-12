@@ -4,16 +4,10 @@ import CatalogLayout from '../../layouts/CatalogLayout.astro';
 import SearchWidget from '../../components/catalog/SearchWidget.astro';
 import TagFilter from '../../components/catalog/TagFilter.astro';
 import ToolGrid from '../../components/catalog/ToolGrid.astro';
-import CategoryCard from '../../components/catalog/CategoryCard.astro';
 import Space from '../../components/Space.astro';
 import TextWidth from '../../components/TextWidth.astro';
-import Sequence from '../../components/Sequence.astro';
-import SequenceItem from '../../components/SequenceItem.astro';
-import Rounded from '../../components/Rounded.astro';
 import { sortToolsByRating } from '../../lib/tools';
-import { getToolCountForCollection, sortCollectionsByOrder } from '../../lib/collections';
 import type { ToolData } from '../../lib/types';
-import type { CollectionData } from '../../lib/collections';
 
 // Получаем все инструменты
 const toolsCollection = await getCollection('tools');
@@ -26,17 +20,6 @@ const tools: ToolData[] = toolsCollection.map(entry => ({
 
 // Сортируем по рейтингу
 const sortedTools = sortToolsByRating(tools);
-
-// Получаем коллекции
-const collectionsEntries = await getCollection('collections');
-const collections: CollectionData[] = sortCollectionsByOrder(
-  collectionsEntries.map(entry => ({
-    slug: entry.slug,
-    ...entry.data
-  }))
-);
-
-
 ---
 
 <CatalogLayout
@@ -56,33 +39,12 @@ const collections: CollectionData[] = sortCollectionsByOrder(
 
   <Space size="L" />
 
-  <!-- Категории -->
-  <h2>Категории</h2>
-  <Space size="S" />
-  <Sequence size="L" gap="M">
-    {collections.map(col => (
-      <SequenceItem>
-        <CategoryCard
-          slug={col.slug}
-          title={col.title}
-          description={col.description}
-          icon={col.icon}
-          toolCount={getToolCountForCollection(tools, col)}
-        />
-      </SequenceItem>
-    ))}
-  </Sequence>
-
-  <Space size="L" />
-
   <!-- Фильтры -->
   <TagFilter />
 
   <Space size="M" />
 
   <!-- Основная сетка -->
-  <h2>Все сервисы</h2>
-  <Space size="S" />
   <ToolGrid tools={sortedTools} />
 
 
